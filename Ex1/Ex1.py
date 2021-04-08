@@ -8,8 +8,14 @@ import torch.nn.functional as F
 from torchvision import models
 from torchsummary import summary
 import torch.optim as optim
+import time
+import os
+import argparse
 
-EPOCHS = 10
+from utils import Running_Time
+
+EPOCHS = 2
+# EPOCHS = 35
 # EPOCHS = 70
 # EPOCHS = 7
 
@@ -19,8 +25,15 @@ DOWNLOAD_FLAG = False
 DEBUG_PRINT = False
 # DEBUG_PRINT = True
 
-PATH = './cifar_net.pth'
+DEBUG_FAST_EXECUTION = False
+# DEBUG_FAST_EXECUTION = True
 
+SAVE_MODEL_DIR_PATH = r'./SavedModels/'
+MODEL_SUFFIX = '.pth'
+FIGURE_SUFFIX = '.png'
+PATH = ""
+
+run_time = Running_Time()
 
 # functions to show an image
 def imshow(img):
@@ -41,47 +54,46 @@ def imshow(img):
 
 # ◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄► #
 
-class PlotAccuracy():
-  
+class PlotData():
   def __init__(self, length):
-    # plt.figure()
-    self.fig, self.ax = plt.subplots()
     self.index = 0
     self.__maxindex = length
     self.valuesList = np.zeros((2, length))
+  def isFull(self):
+    return self.index >= self.__maxindex
+class ModelStatistics():
 
-  def AddData(self, x, y):
-    if(self.index >= self.__maxindex):
+  def __init__(self, length, plotNames):
+    # plt.figure()
+    self.fig, self.ax = plt.subplots()
+    self.listDict = {}
+    for name in plotNames:
+      self.listDict[name] = PlotData(length)
+
+  def AddData(self, name, x, y):
+    if(self.listDict[name].isFull()):
       raise Exception("Array is full. Possibly initialized with the wrong length")
-    self.valuesList[0][self.index] = x
-    self.valuesList[1][self.index] = y
-    self.index = self.index + 1
-    if(self.index == self.__maxindex):
-      self.ax.plot(self.valuesList[0], self.valuesList[1])
+    self.listDict[name].valuesList[0][self.listDict[name].index] = x
+    self.listDict[name].valuesList[1][self.listDict[name].index] = y
+    self.listDict[name].index = self.listDict[name].index + 1
 
-  # def Show(self, label="", xlabel="", ylabel=""):
   def Show(self):
-    # plt.clf() # clears the entire current figure
-    # self.ax.plot(self.valuesList[0], self.valuesList[1], label=label)
-    # if(not xlabel):
-    #   self.ax.set_xlabel(xlabel)
-    # if(not ylabel):
-    #   self.ax.set_ylabel(ylabel)
+    self.ax.cla()
+    for name in self.listDict.keys():
+      self.ax.plot(self.listDict[name].valuesList[0][:self.listDict[name].index], self.listDict[name].valuesList[1][:self.listDict[name].index], label=name)
+    self.fig.legend()
     self.fig.show()
 
   def Save(self, path):
-  # def Save(self, path, label="", xlabel="", ylabel=""):
-    # plt.clf() # clears the entire current figure
-    # self.ax.plot(self.valuesList[0], self.valuesList[1], label=label)
-    # if(not xlabel):
-    #   self.ax.set_xlabel(xlabel)
-    # if(not ylabel):
-    #   self.ax.set_ylabel(ylabel)
+    self.ax.cla()
+    for name in self.listDict.keys():
+      self.ax.plot(self.listDict[name].valuesList[0][:self.listDict[name].index], self.listDict[name].valuesList[1][:self.listDict[name].index], label=name)
+    self.fig.legend()
     self.fig.savefig(path)
 
 class Net(nn.Module):
 
-  def __init__(self):
+  def __init__(self, args):
     super(Net, self).__init__()
 
     if(torch.cuda.is_available()):
@@ -89,6 +101,8 @@ class Net(nn.Module):
       self.to(device)
 
     self.set_model()
+    self.lr = args.lr
+    self.momentum = args.momentum
 
   def Get_loss_function(self):
     if(torch.cuda.is_available()):
@@ -97,110 +111,92 @@ class Net(nn.Module):
       return nn.CrossEntropyLoss()
 
   def Get_optimizer(self):
-    return optim.SGD(self.parameters(), lr=0.001, momentum=0.9)
+    return optim.SGD(self.parameters(), lr=self.lr, momentum=self.momentum)
 
   def print_shape(self, x, msg, print_flag):
     if(print_flag):
       print(str(x.shape) + " " + msg)
 
-
 # 1.
-  def set_model(self):
-    self.conv1 = nn.Conv2d(3, 6, 5)
-    self.conv2 = nn.Conv2d(6, 16, 5)
-    self.pool = nn.MaxPool2d(2, 2)
-    self.fc1 = nn.Linear(16 * 5 * 5, 120)
-    self.fc2 = nn.Linear(120, 84)
-    self.fc3 = nn.Linear(84, 10)
+  # def set_model(self):
+  #   self.conv1 = nn.Conv2d(3, 6, 5)
+  #   self.conv2 = nn.Conv2d(6, 16, 5)
+  #   self.pool = nn.MaxPool2d(2, 2)
+  #   self.fc1 = nn.Linear(16 * 5 * 5, 120)
+  #   self.fc2 = nn.Linear(120, 84)
+  #   self.fc3 = nn.Linear(84, 10)
 
-  def forward(self, x):
-      x = self.pool(F.relu(self.conv1(x)))
-      x = self.pool(F.relu(self.conv2(x)))
-      x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
-      x = F.relu(self.fc1(x))
-      x = F.relu(self.fc2(x))
-      x = self.fc3(x)
-      return x
+  # def forward(self, x):
+  #     x = self.pool(F.relu(self.conv1(x)))
+  #     x = self.pool(F.relu(self.conv2(x)))
+  #     x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
+  #     x = F.relu(self.fc1(x))
+  #     x = F.relu(self.fc2(x))
+  #     x = self.fc3(x)
+  #     return x
 
 # 2
-  # def print_shape(self):
-  #     self.conv1 = nn.Conv2d(3, 6, 3)
-  #     self.conv2 = nn.Conv2d(6, 6, 3, padding=1)
-  #     self.conv3 = nn.Conv2d(6, 16, 5)
-  #     self.pool = nn.MaxPool2d(2, 2)
-  #     self.fc1 = nn.Linear(16 * 5 * 5, 120)
-  #     self.fc2 = nn.Linear(120, 84)
-  #     self.fc3 = nn.Linear(84, 10)
+  def set_model(self):
+      self.conv1 = nn.Conv2d(3, 6, 3)
+      self.conv2 = nn.Conv2d(6, 6, 3, padding=1)
+      self.conv3 = nn.Conv2d(6, 16, 5)
+      self.pool = nn.MaxPool2d(2, 2)
+      self.fc1 = nn.Linear(16 * 5 * 5, 120)
+      self.fc2 = nn.Linear(120, 84)
+      self.fc3 = nn.Linear(84, 10)
 
-  # def forward(self, x):
-  #     self.print_shape(x, "input", DEBUG_PRINT)
-  #     x = F.relu(self.conv1(x))
-  #     self.print_shape(x, "conv1", DEBUG_PRINT)
-  #     x = self.pool(x)
-  #     self.print_shape(x, "pool", DEBUG_PRINT)
-  #     for i in range(5):
-  #       x = F.relu(self.conv2(x))
-  #       self.print_shape(x, "conv2", DEBUG_PRINT)
-  #     x = F.relu(self.conv3(x))
-  #     self.print_shape(x, "conv3", DEBUG_PRINT)
-  #     x = self.pool(x)
-  #     self.print_shape(x, "pool", DEBUG_PRINT)
-  #     x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
-  #     self.print_shape(x, "view", DEBUG_PRINT)
-  #     x = F.relu(self.fc1(x))
-  #     self.print_shape(x, "fc1", DEBUG_PRINT)
-  #     x = F.relu(self.fc2(x))
-  #     self.print_shape(x, "fc2", DEBUG_PRINT)
-  #     x = self.fc3(x)
-  #     self.print_shape(x, "fc3", DEBUG_PRINT)
-  #     return x
+  def forward(self, x):
+      self.print_shape(x, "input", DEBUG_PRINT)
+      x = F.relu(self.conv1(x))
+      self.print_shape(x, "conv1", DEBUG_PRINT)
+      x = self.pool(x)
+      self.print_shape(x, "pool", DEBUG_PRINT)
+      for i in range(5):
+        x = F.relu(self.conv2(x))
+        self.print_shape(x, "conv2", DEBUG_PRINT)
+      x = F.relu(self.conv3(x))
+      self.print_shape(x, "conv3", DEBUG_PRINT)
+      x = self.pool(x)
+      self.print_shape(x, "pool", DEBUG_PRINT)
+      x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
+      self.print_shape(x, "view", DEBUG_PRINT)
+      x = F.relu(self.fc1(x))
+      self.print_shape(x, "fc1", DEBUG_PRINT)
+      x = F.relu(self.fc2(x))
+      self.print_shape(x, "fc2", DEBUG_PRINT)
+      x = self.fc3(x)
+      self.print_shape(x, "fc3", DEBUG_PRINT)
+      return x
 
 # 3.
-  # def print_shape(self):
-  #     self.conv1 = nn.Conv2d(3, 6, 3)
-  #     self.conv2 = nn.Conv2d(6, 12, 3)
-  #     self.conv3 = nn.Conv2d(12, 20, 3)
-  #     self.pool = nn.MaxPool2d(2, 2)
-  #     self.fc1 = nn.Linear(20 * 3 * 3, 100)
-  #     self.fc2 = nn.Linear(100, 64)
-  #     self.fc3 = nn.Linear(64, 10)
+  # def set_model(self):
+  #   self.conv1 = nn.Conv2d(3, 6, 3)
+  #   self.conv2 = nn.Conv2d(6, 16, 3)
+  #   self.conv3 = nn.Conv2d(16, 28, 3)
+  #   self.pool = nn.MaxPool2d(2, 2)
+  #   self.fc1 = nn.Linear(28 * 3 * 3, 120)
+  #   self.fc2 = nn.Linear(120, 84)
+  #   self.fc3 = nn.Linear(84, 10)
 
   # def forward(self, x):
-  #     self.print_shape(x, "input", DEBUG_PRINT)
-  #     x = F.relu(self.conv1(x))
-  #     self.print_shape(x, "conv1", DEBUG_PRINT)
-  #     x = self.pool(x)
-  #     self.print_shape(x, "pool", DEBUG_PRINT)
-  #     x = F.relu(self.conv2(x))
-  #     self.print_shape(x, "conv2", DEBUG_PRINT)
-  #     x = self.pool(x)
-  #     self.print_shape(x, "pool", DEBUG_PRINT)
-  #     x = F.relu(self.conv3(x))
-  #     self.print_shape(x, "conv3", DEBUG_PRINT)
-  #     x = self.pool(x)
-  #     self.print_shape(x, "pool", DEBUG_PRINT)
-  #     # x = x.view(-1, 20 * 3 * 3) # reshapes for the fully connected
-  #     view_size = 1
-  #     for i in range(len(x.shape)):
-  #       view_size = view_size*x.shape[i]
-  #     x = x.view(view_size) # reshapes for the fully connected
-  #     self.print_shape(x, "view", DEBUG_PRINT)
+  #     x = self.pool(F.relu(self.conv1(x)))
+  #     x = self.pool(F.relu(self.conv2(x)))
+  #     x = self.pool(F.relu(self.conv3(x)))
+  #     x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
   #     x = F.relu(self.fc1(x))
-  #     self.print_shape(x, "fc1", DEBUG_PRINT)
   #     x = F.relu(self.fc2(x))
-  #     self.print_shape(x, "fc2", DEBUG_PRINT)
   #     x = self.fc3(x)
-  #     self.print_shape(x, "fc3", DEBUG_PRINT)
   #     return x
 
-def train(net: Net, trainloader):
+def train(net: Net, trainloader, testloader):
 
   criterion = net.Get_loss_function()
   optimizer = net.Get_optimizer()
-  plotAccuracy = PlotAccuracy(EPOCHS)
-  plotAccuracy.ax.set_title("Training")
-  plotAccuracy.ax.set_xlabel("Epochs")
-  plotAccuracy.ax.set_ylabel("Training Loss")
+
+  modelStatistics = ModelStatistics(EPOCHS, ["train", "test"])
+  modelStatistics.ax.set_title("Training")
+  modelStatistics.ax.set_xlabel("Epochs")
+  modelStatistics.ax.set_ylabel("Training Loss")
 
   for epoch in range(EPOCHS):  # loop over the dataset multiple times
 
@@ -228,53 +224,69 @@ def train(net: Net, trainloader):
       if i % 2000 == 1999: # print every 2000 mini-batches
         print('[%d, %5d] loss: %.3f' % (epoch + 1, i + 1, running_loss / 2000))
         running_loss = 0.0
+        if(DEBUG_FAST_EXECUTION): 
+          break
 
-    plotAccuracy.AddData(epoch, epoch_loss / len(trainloader))
+    modelStatistics.AddData("train", epoch, epoch_loss / len(trainloader))
+    modelStatistics.AddData("test", epoch, test_accuracy(net, testloader))
     epoch_loss = 0.0
 
-  plotAccuracy.Show()
+    # modelStatistics.Show()
+    modelStatistics.Save(PATH + "_epochs-" + str(epoch) + FIGURE_SUFFIX)
+    torch.save(net.state_dict(), PATH + "_epochs-" + str(epoch) + MODEL_SUFFIX) # save trained model. See `here <https://pytorch.org/docs/stable/notes/serialization.html>`_ for more details on saving PyTorch models.
+    run_time.print_running_time()
 
   print('Finished Training')
 
-  # save trained model. See `here <https://pytorch.org/docs/stable/notes/serialization.html>`_ for more details on saving PyTorch models.
-  torch.save(net.state_dict(), PATH)
 
-def test(testloader, classes):
-
-  dataiter = iter(testloader)
-  images, labels = dataiter.next()
-
-  net = Net()
-  # if(torch.cuda.is_available()):
-  #   net.cuda() 
-
-  net.load_state_dict(torch.load(PATH))
-
-  outputs = net(images)
-
-  _, predicted = torch.max(outputs, 1)
-
-  print('Predicted: ', ' '.join('%5s' % classes[predicted[j]] for j in range(4)))
-
+def test_accuracy(net: Net, testloader):
   correct = 0
   total = 0
-  plotAccuracy = PlotAccuracy(len(testloader))
-  plotAccuracy.ax.set_title("Testing")
-  plotAccuracy.ax.set_xlabel("Test Data")
-  plotAccuracy.ax.set_ylabel("Accuracy")
 
   with torch.no_grad():
     for data in testloader:
 
       images, labels = data
+      if(torch.cuda.is_available()):
+        images, labels = images.cuda(), labels.cuda()
 
       outputs = net(images)
       _, predicted = torch.max(outputs.data, 1)
       total += labels.size(0)
       correct += (predicted == labels).sum().item()
-      plotAccuracy.AddData(total, correct/total)
 
-  plotAccuracy.Show()
+  return correct/total
+
+
+def test(testloader, classes):
+  net = Net()
+  if(torch.cuda.is_available()):
+    net.cuda() 
+
+  net.load_state_dict(torch.load(PATH)) # todo ================================================================================ fix
+
+  correct = 0
+  total = 0
+
+  testStatistics = ModelStatistics(len(testloader), ["test"])
+  testStatistics.ax.set_title("Testing")
+  testStatistics.ax.set_xlabel("Test Data")
+  testStatistics.ax.set_ylabel("Accuracy")
+
+  with torch.no_grad():
+    for data in testloader:
+
+      images, labels = data
+      if(torch.cuda.is_available()):
+        images, labels = images.cuda(), labels.cuda()
+
+      outputs = net(images)
+      _, predicted = torch.max(outputs.data, 1)
+      total += labels.size(0)
+      correct += (predicted == labels).sum().item()
+      testStatistics.AddData("test", total, correct/total)
+
+  testStatistics.Show()
   print('Accuracy of the network on the %d test images: %d %%' % (len(testloader) * testloader.batch_size, 100 * correct / total))
 
   class_correct = list(0. for i in range(10))
@@ -294,9 +306,7 @@ def test(testloader, classes):
   for i in range(10):
     print('Accuracy of %5s : %2d %%' % (classes[i], 100 * class_correct[i] / class_total[i]))
   
-  del dataiter
-
-def main():
+def main(args):
 
   # ◄►◄► Set CUDA GPU ◄►◄► #
   if(torch.cuda.is_available()):
@@ -317,7 +327,7 @@ def main():
 
   # ◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄► #
 
-  net = Net()
+  net = Net(args)
   if(torch.cuda.is_available()):
     net.cuda() 
 
@@ -331,11 +341,39 @@ def main():
   summary(net, input_size=(3, 32, 32))
   # summary(net, (3, 32, 32), depth=3)
 
-  train(net, trainloader)
-  test(testloader, classes)
+  train(net, trainloader, testloader)
+  # test(testloader, classes)
 
 if __name__ == '__main__':
-  main()
+
+  run_time = Running_Time()
+
+  parser = argparse.ArgumentParser(description='Test cifar10')
+  parser.add_argument('--epochs', type=int, default=4, metavar='N',
+                      help='number of epochs to train (default: 4)')
+  parser.add_argument('--lr', type=float, default=0.001, metavar='LR',
+                      help='learning rate (default: 0.001)')
+  parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
+                      help='SGD momentum (default: 0.9)')
+  parser.add_argument('--save-name', default="",
+                      help='Specific name when saving the model')
+  args = parser.parse_args()
+
+  if not os.path.exists(SAVE_MODEL_DIR_PATH):
+    os.makedirs(SAVE_MODEL_DIR_PATH)
+
+  PATH = SAVE_MODEL_DIR_PATH + 'net_' + time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime())
+  if(args.save_name):
+    PATH = PATH + '_' + args.save_name
+
+  EPOCHS = args.epochs
+
+  # PATH = PATH + "_epochs-" + str(args.epochs)
+
+  main(args)
+
+  run_time.print_running_time()
+
   _ = input("Press enter to finish..")
 
 

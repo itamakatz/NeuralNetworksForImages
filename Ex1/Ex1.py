@@ -11,6 +11,7 @@ import torch.optim as optim
 import time
 import os
 import argparse
+from contextlib import redirect_stdout
 
 from utils import Running_Time
 
@@ -31,6 +32,7 @@ DEBUG_FAST_EXECUTION = False
 SAVE_MODEL_DIR_PATH = r'./SavedModels/'
 MODEL_SUFFIX = '.pth'
 FIGURE_SUFFIX = '.png'
+INFO_SUFFIX = '.txt'
 PATH = ""
 
 run_time = Running_Time()
@@ -103,70 +105,71 @@ class Net(nn.Module):
     self.set_model()
     self.lr = args.lr
     self.momentum = args.momentum
-
-  def Get_loss_function(self):
+    self.loss_function = nn.CrossEntropyLoss()
     if(torch.cuda.is_available()):
-      return nn.CrossEntropyLoss().cuda()
-    else:
-      return nn.CrossEntropyLoss()
+      self.loss_function .cuda()
+    self.optimizer = optim.SGD(self.parameters(), lr=self.lr, momentum=self.momentum)
 
-  def Get_optimizer(self):
-    return optim.SGD(self.parameters(), lr=self.lr, momentum=self.momentum)
+  # def Get_loss_function(self):
+  #   return self._loss_function
+
+  # def Get_optimizer(self):
+  #   return self._optimizer
 
   def print_shape(self, x, msg, print_flag):
     if(print_flag):
       print(str(x.shape) + " " + msg)
 
 # 1.
-  # def set_model(self):
-  #   self.conv1 = nn.Conv2d(3, 6, 5)
-  #   self.conv2 = nn.Conv2d(6, 16, 5)
-  #   self.pool = nn.MaxPool2d(2, 2)
-  #   self.fc1 = nn.Linear(16 * 5 * 5, 120)
-  #   self.fc2 = nn.Linear(120, 84)
-  #   self.fc3 = nn.Linear(84, 10)
-
-  # def forward(self, x):
-  #     x = self.pool(F.relu(self.conv1(x)))
-  #     x = self.pool(F.relu(self.conv2(x)))
-  #     x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
-  #     x = F.relu(self.fc1(x))
-  #     x = F.relu(self.fc2(x))
-  #     x = self.fc3(x)
-  #     return x
-
-# 2
   def set_model(self):
-      self.conv1 = nn.Conv2d(3, 6, 3)
-      self.conv2 = nn.Conv2d(6, 6, 3, padding=1)
-      self.conv3 = nn.Conv2d(6, 16, 5)
-      self.pool = nn.MaxPool2d(2, 2)
-      self.fc1 = nn.Linear(16 * 5 * 5, 120)
-      self.fc2 = nn.Linear(120, 84)
-      self.fc3 = nn.Linear(84, 10)
+    self.conv1 = nn.Conv2d(3, 6, 5)
+    self.conv2 = nn.Conv2d(6, 16, 5)
+    self.pool = nn.MaxPool2d(2, 2)
+    self.fc1 = nn.Linear(16 * 5 * 5, 120)
+    self.fc2 = nn.Linear(120, 84)
+    self.fc3 = nn.Linear(84, 10)
 
   def forward(self, x):
-      self.print_shape(x, "input", DEBUG_PRINT)
-      x = F.relu(self.conv1(x))
-      self.print_shape(x, "conv1", DEBUG_PRINT)
-      x = self.pool(x)
-      self.print_shape(x, "pool", DEBUG_PRINT)
-      for i in range(5):
-        x = F.relu(self.conv2(x))
-        self.print_shape(x, "conv2", DEBUG_PRINT)
-      x = F.relu(self.conv3(x))
-      self.print_shape(x, "conv3", DEBUG_PRINT)
-      x = self.pool(x)
-      self.print_shape(x, "pool", DEBUG_PRINT)
+      x = self.pool(F.relu(self.conv1(x)))
+      x = self.pool(F.relu(self.conv2(x)))
       x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
-      self.print_shape(x, "view", DEBUG_PRINT)
       x = F.relu(self.fc1(x))
-      self.print_shape(x, "fc1", DEBUG_PRINT)
       x = F.relu(self.fc2(x))
-      self.print_shape(x, "fc2", DEBUG_PRINT)
       x = self.fc3(x)
-      self.print_shape(x, "fc3", DEBUG_PRINT)
       return x
+
+# 2
+  # def set_model(self):
+  #     self.conv1 = nn.Conv2d(3, 6, 3)
+  #     self.conv2 = nn.Conv2d(6, 6, 3, padding=1)
+  #     self.conv3 = nn.Conv2d(6, 16, 5)
+  #     self.pool = nn.MaxPool2d(2, 2)
+  #     self.fc1 = nn.Linear(16 * 5 * 5, 120)
+  #     self.fc2 = nn.Linear(120, 84)
+  #     self.fc3 = nn.Linear(84, 10)
+
+  # def forward(self, x):
+  #     self.print_shape(x, "input", DEBUG_PRINT)
+  #     x = F.relu(self.conv1(x))
+  #     self.print_shape(x, "conv1", DEBUG_PRINT)
+  #     x = self.pool(x)
+  #     self.print_shape(x, "pool", DEBUG_PRINT)
+  #     for i in range(5):
+  #       x = F.relu(self.conv2(x))
+  #       self.print_shape(x, "conv2", DEBUG_PRINT)
+  #     x = F.relu(self.conv3(x))
+  #     self.print_shape(x, "conv3", DEBUG_PRINT)
+  #     x = self.pool(x)
+  #     self.print_shape(x, "pool", DEBUG_PRINT)
+  #     x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
+  #     self.print_shape(x, "view", DEBUG_PRINT)
+  #     x = F.relu(self.fc1(x))
+  #     self.print_shape(x, "fc1", DEBUG_PRINT)
+  #     x = F.relu(self.fc2(x))
+  #     self.print_shape(x, "fc2", DEBUG_PRINT)
+  #     x = self.fc3(x)
+  #     self.print_shape(x, "fc3", DEBUG_PRINT)
+  #     return x
 
 # 3.
   # def set_model(self):
@@ -188,58 +191,39 @@ class Net(nn.Module):
   #     x = self.fc3(x)
   #     return x
 
-def train(net: Net, trainloader, testloader):
+def train(net: Net, trainloader, epoch):
+  net.train()
+  running_loss = 0.0
+  epoch_loss = 0.0
+  for i, data in enumerate(trainloader, 0):
+    # get the inputs; data is a list of [inputs, labels]
+    inputs, labels = data
 
-  criterion = net.Get_loss_function()
-  optimizer = net.Get_optimizer()
+    if(torch.cuda.is_available()):
+      inputs, labels = inputs.cuda(), labels.cuda()
 
-  modelStatistics = ModelStatistics(EPOCHS, ["train", "test"])
-  modelStatistics.ax.set_title("Training")
-  modelStatistics.ax.set_xlabel("Epochs")
-  modelStatistics.ax.set_ylabel("Training Loss")
+    # zero the parameter gradients
+    net.optimizer.zero_grad()
 
-  for epoch in range(EPOCHS):  # loop over the dataset multiple times
+    # forward + backward + optimize
+    outputs = net(inputs)
+    loss = net.loss_function(outputs, labels)
+    loss.backward()
+    net.optimizer.step()
 
-    running_loss = 0.0
-    epoch_loss = 0.0
-    for i, data in enumerate(trainloader, 0):
-      # get the inputs; data is a list of [inputs, labels]
-      inputs, labels = data
+    # print statistics
+    running_loss += loss.item()
+    epoch_loss += loss.item()
+    if i % 2000 == 1999: # print every 2000 mini-batches
+      print('[%d, %5d] loss: %.3f' % (epoch + 1, i + 1, running_loss / 2000))
+      running_loss = 0.0
+      if(DEBUG_FAST_EXECUTION): 
+        break
 
-      if(torch.cuda.is_available()):
-        inputs, labels = inputs.cuda(), labels.cuda()
+    return epoch_loss/ len(trainloader)
 
-      # zero the parameter gradients
-      optimizer.zero_grad()
-
-      # forward + backward + optimize
-      outputs = net(inputs)
-      loss = criterion(outputs, labels)
-      loss.backward()
-      optimizer.step()
-
-      # print statistics
-      running_loss += loss.item()
-      epoch_loss += loss.item()
-      if i % 2000 == 1999: # print every 2000 mini-batches
-        print('[%d, %5d] loss: %.3f' % (epoch + 1, i + 1, running_loss / 2000))
-        running_loss = 0.0
-        if(DEBUG_FAST_EXECUTION): 
-          break
-
-    modelStatistics.AddData("train", epoch, epoch_loss / len(trainloader))
-    modelStatistics.AddData("test", epoch, test_accuracy(net, testloader))
-    epoch_loss = 0.0
-
-    # modelStatistics.Show()
-    modelStatistics.Save(PATH + "_epochs-" + str(epoch) + FIGURE_SUFFIX)
-    torch.save(net.state_dict(), PATH + "_epochs-" + str(epoch) + MODEL_SUFFIX) # save trained model. See `here <https://pytorch.org/docs/stable/notes/serialization.html>`_ for more details on saving PyTorch models.
-    run_time.print_running_time()
-
-  print('Finished Training')
-
-
-def test_accuracy(net: Net, testloader):
+def test(net: Net, testloader):
+  net.eval()
   correct = 0
   total = 0
 
@@ -257,8 +241,30 @@ def test_accuracy(net: Net, testloader):
 
   return correct/total
 
+def run(net: Net, trainloader, testloader):
 
-def test(testloader, classes):
+  modelStatistics = ModelStatistics(EPOCHS, ["Train Loss", "Test Accuracy"])
+  modelStatistics.ax.set_title("Training")
+  modelStatistics.ax.set_xlabel("Epochs")
+  # modelStatistics.ax.set_ylabel("Training Loss")
+
+  for epoch in range(EPOCHS):  # loop over the dataset multiple times
+
+    epoch_loss = train(net, trainloader, epoch)
+    test_accuracy = test(net, testloader)
+
+    modelStatistics.AddData("Train Loss", epoch, epoch_loss )
+    modelStatistics.AddData("Test Accuracy", epoch, test_accuracy)
+
+    # modelStatistics.Show()
+    modelStatistics.Save(PATH + "_epochs-" + str(epoch) + FIGURE_SUFFIX)
+    torch.save(net.state_dict(), PATH + "_epochs-" + str(epoch) + MODEL_SUFFIX) # save trained model. See `here <https://pytorch.org/docs/stable/notes/serialization.html>`_ for more details on saving PyTorch models.
+    run_time.print_running_time()
+
+  print('Finished Training')
+
+
+def final_test(testloader, classes):
   net = Net()
   if(torch.cuda.is_available()):
     net.cuda() 
@@ -338,10 +344,12 @@ def main(args):
   # bla = len(images)
   # im = images[0]
   # summary(net)
-  summary(net, input_size=(3, 32, 32))
+  with open(PATH + INFO_SUFFIX, 'w') as f:
+    with redirect_stdout(f):
+        summary(net, input_size=(3, 32, 32))
   # summary(net, (3, 32, 32), depth=3)
 
-  train(net, trainloader, testloader)
+  run(net, trainloader, testloader)
   # test(testloader, classes)
 
 if __name__ == '__main__':
@@ -357,18 +365,24 @@ if __name__ == '__main__':
                       help='SGD momentum (default: 0.9)')
   parser.add_argument('--save-name', default="",
                       help='Specific name when saving the model')
+  parser.add_argument('--debug-mode', action='store_true', default=False,
+                      help='Switches to debug mode which overwrites all other given arguments (default: False)')
   args = parser.parse_args()
 
   if not os.path.exists(SAVE_MODEL_DIR_PATH):
     os.makedirs(SAVE_MODEL_DIR_PATH)
 
   PATH = SAVE_MODEL_DIR_PATH + 'net_' + time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime())
-  if(args.save_name):
-    PATH = PATH + '_' + args.save_name
-
-  EPOCHS = args.epochs
-
-  # PATH = PATH + "_epochs-" + str(args.epochs)
+  if(args.debug_mode):
+    print(' ************* Running in DEBUG mode *************')
+    EPOCHS = 4
+    PATH = PATH + '_Debuging'
+    DEBUG_FAST_EXECUTION = True
+  else:
+    EPOCHS = args.epochs
+    if(args.save_name):
+      PATH = PATH + '_' + args.save_name
+    DEBUG_FAST_EXECUTION = False
 
   main(args)
 

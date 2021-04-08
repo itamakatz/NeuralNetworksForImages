@@ -220,7 +220,7 @@ def train(net: Net, trainloader, epoch):
       if(DEBUG_FAST_EXECUTION): 
         break
 
-    return epoch_loss/ len(trainloader)
+  return epoch_loss/ len(trainloader)
 
 def test(net: Net, testloader):
   net.eval()
@@ -259,7 +259,7 @@ def run(net: Net, trainloader, testloader):
     # modelStatistics.Show()
     modelStatistics.Save(PATH + "_epochs-" + str(epoch) + FIGURE_SUFFIX)
     torch.save(net.state_dict(), PATH + "_epochs-" + str(epoch) + MODEL_SUFFIX) # save trained model. See `here <https://pytorch.org/docs/stable/notes/serialization.html>`_ for more details on saving PyTorch models.
-    run_time.print_running_time()
+    print(f"Running time: {run_time.get_running_time()}")
 
   print('Finished Training')
 
@@ -346,7 +346,18 @@ def main(args):
   # summary(net)
   with open(PATH + INFO_SUFFIX, 'w') as f:
     with redirect_stdout(f):
-        summary(net, input_size=(3, 32, 32))
+      print(net)
+      summary(net, input_size=(3, 32, 32))
+      print('\nExtra info:')
+      print("Model's state_dict:")
+      for param_tensor in net.state_dict():
+        print(param_tensor, "\t", net.state_dict()[param_tensor].size())
+      print()
+      # Print optimizer's state_dict
+      print("Optimizer's state_dict:")
+      for var_name in net.optimizer.state_dict():
+        print(var_name, "\t", net.optimizer.state_dict()[var_name])
+
   # summary(net, (3, 32, 32), depth=3)
 
   run(net, trainloader, testloader)
@@ -374,7 +385,9 @@ if __name__ == '__main__':
 
   PATH = SAVE_MODEL_DIR_PATH + 'net_' + time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime())
   if(args.debug_mode):
-    print(' ************* Running in DEBUG mode *************')
+    print('\n*************************************************')
+    print('************* Running in DEBUG mode *************')
+    print('*************************************************\n')
     EPOCHS = 4
     PATH = PATH + '_Debuging'
     DEBUG_FAST_EXECUTION = True
@@ -386,7 +399,8 @@ if __name__ == '__main__':
 
   main(args)
 
-  run_time.print_running_time()
+  print("Total Execution Time:")
+  print(f"--- {run_time.get_running_time()} ---")
 
   _ = input("Press enter to finish..")
 

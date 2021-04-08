@@ -6,10 +6,10 @@ class Running_Time:
     def __init__(self):
         self.start_time = time.time()
 
-    def print_running_time(self):
+    def get_running_time(self):
         current_time = time.time()
-        print("Total Execution Time:")
-        print(f"--- {str((current_time - self.start_time)//60)}:{str(current_time - self.start_time)} min:sec ---")
+        # print("Total Execution Time:")
+        return f"{((current_time - self.start_time)//60):.0f}:{(current_time - self.start_time)%60:.0f} min:sec"
 
 class Execution_Time:
 

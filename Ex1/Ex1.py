@@ -33,7 +33,6 @@ SAVE_MODEL_DIR_PATH = r'./SavedModels/'
 MODEL_SUFFIX = '.pth'
 FIGURE_SUFFIX = '.png'
 INFO_SUFFIX = '.txt'
-PATH = ""
 
 run_time = Running_Time()
 
@@ -55,6 +54,30 @@ def imshow(img):
 #   print(' '.join('%5s' % classes[labels[j]] for j in range(4)))
 
 # ◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄► #
+
+class SavingPath():
+
+  def __init__(self, args):
+    SavingPath._lr = args.lr
+    if(args.debug_mode):
+      SavingPath._save_name = "_Debugging"
+    else:
+      if(args.save_name):
+        SavingPath._save_name = "_" + args.save_name
+      else:
+        SavingPath._save_name = ""
+
+    if not os.path.exists(SAVE_MODEL_DIR_PATH):
+      os.makedirs(SAVE_MODEL_DIR_PATH)
+
+    SavingPath._path = SAVE_MODEL_DIR_PATH + time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime()) + SavingPath._save_name + "_lr-" + str(SavingPath._lr)
+    
+  @staticmethod
+  def get_path(epoch = -1, suffix = ""):
+    if(epoch == -1):
+      return SavingPath._path + suffix
+    else:
+      return SavingPath._path +"_epoch-" + str(epoch) + suffix
 
 class PlotData():
   def __init__(self, length):
@@ -120,23 +143,23 @@ class Net(nn.Module):
     if(print_flag):
       print(str(x.shape) + " " + msg)
 
-# 1.
-  def set_model(self):
-    self.conv1 = nn.Conv2d(3, 6, 5)
-    self.conv2 = nn.Conv2d(6, 16, 5)
-    self.pool = nn.MaxPool2d(2, 2)
-    self.fc1 = nn.Linear(16 * 5 * 5, 120)
-    self.fc2 = nn.Linear(120, 84)
-    self.fc3 = nn.Linear(84, 10)
+# 1
+#   def set_model(self):
+#     self.conv1 = nn.Conv2d(3, 6, 5)
+#     self.conv2 = nn.Conv2d(6, 16, 5)
+#     self.pool = nn.MaxPool2d(2, 2)
+#     self.fc1 = nn.Linear(16 * 5 * 5, 120)
+#     self.fc2 = nn.Linear(120, 84)
+#     self.fc3 = nn.Linear(84, 10)
 
-  def forward(self, x):
-      x = self.pool(F.relu(self.conv1(x)))
-      x = self.pool(F.relu(self.conv2(x)))
-      x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
-      x = F.relu(self.fc1(x))
-      x = F.relu(self.fc2(x))
-      x = self.fc3(x)
-      return x
+#   def forward(self, x):
+#       x = self.pool(F.relu(self.conv1(x)))
+#       x = self.pool(F.relu(self.conv2(x)))
+#       x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
+#       x = F.relu(self.fc1(x))
+#       x = F.relu(self.fc2(x))
+#       x = self.fc3(x)
+#       return x
 
 # 2
   # def set_model(self):
@@ -171,25 +194,41 @@ class Net(nn.Module):
   #     self.print_shape(x, "fc3", DEBUG_PRINT)
   #     return x
 
-# 3.
+# 3
   # def set_model(self):
-  #   self.conv1 = nn.Conv2d(3, 6, 3)
-  #   self.conv2 = nn.Conv2d(6, 16, 3)
-  #   self.conv3 = nn.Conv2d(16, 28, 3)
+  #   self.conv1 = nn.Conv2d(3, 6, 5)
+  #   self.conv2 = nn.Conv2d(6, 16, 5)
   #   self.pool = nn.MaxPool2d(2, 2)
-  #   self.fc1 = nn.Linear(28 * 3 * 3, 120)
-  #   self.fc2 = nn.Linear(120, 84)
+  #   self.fc1 = nn.Linear(16 * 5 * 5, 84)
+  #   # self.fc2 = nn.Linear(120, 84)
   #   self.fc3 = nn.Linear(84, 10)
 
   # def forward(self, x):
   #     x = self.pool(F.relu(self.conv1(x)))
   #     x = self.pool(F.relu(self.conv2(x)))
-  #     x = self.pool(F.relu(self.conv3(x)))
   #     x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
   #     x = F.relu(self.fc1(x))
-  #     x = F.relu(self.fc2(x))
+  #     # x = F.relu(self.fc2(x))
   #     x = self.fc3(x)
   #     return x
+
+# 4
+  def set_model(self):
+    self.conv1 = nn.Conv2d(3, 6, 5)
+    self.conv2 = nn.Conv2d(6, 16, 5)
+    self.pool = nn.MaxPool2d(2, 2)
+    self.fc1 = nn.Linear(16 * 5 * 5, 120)
+    self.fc2 = nn.Linear(120, 84)
+    self.fc3 = nn.Linear(84, 10)
+
+  def forward(self, x):
+      x = self.pool(F.relu(self.conv1(x)))
+      x = self.pool(F.relu(self.conv2(x)))
+      x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
+      x = F.relu(self.fc1(x))
+      x = F.relu(self.fc2(x))
+      x = self.fc3(x)
+      return x
 
 def train(net: Net, trainloader, epoch):
   net.train()
@@ -257,8 +296,12 @@ def run(net: Net, trainloader, testloader):
     modelStatistics.AddData("Test Accuracy", epoch, test_accuracy)
 
     # modelStatistics.Show()
-    modelStatistics.Save(PATH + "_epochs-" + str(epoch) + FIGURE_SUFFIX)
-    torch.save(net.state_dict(), PATH + "_epochs-" + str(epoch) + MODEL_SUFFIX) # save trained model. See `here <https://pytorch.org/docs/stable/notes/serialization.html>`_ for more details on saving PyTorch models.
+
+    modelStatistics.Save(SavingPath.get_path(epoch, FIGURE_SUFFIX))
+    torch.save(net.state_dict(), SavingPath.get_path(epoch, MODEL_SUFFIX))
+    # modelStatistics.Save("_epochs-" + str(epoch) + FIGURE_SUFFIX)
+    # torch.save(net.state_dict(), PATH + "_lr-" + str(net.lr) + "_epochs-" + str(epoch) + MODEL_SUFFIX) 
+    # save trained model. See `here <https://pytorch.org/docs/stable/notes/serialization.html>`_ for more details on saving PyTorch models.
     print(f"Running time: {run_time.get_running_time()}")
 
   print('Finished Training')
@@ -344,7 +387,8 @@ def main(args):
   # bla = len(images)
   # im = images[0]
   # summary(net)
-  with open(PATH + INFO_SUFFIX, 'w') as f:
+
+  with open(SavingPath.get_path(suffix=INFO_SUFFIX) , 'w') as f:
     with redirect_stdout(f):
       print(net)
       summary(net, input_size=(3, 32, 32))
@@ -380,23 +424,21 @@ if __name__ == '__main__':
                       help='Switches to debug mode which overwrites all other given arguments (default: False)')
   args = parser.parse_args()
 
-  if not os.path.exists(SAVE_MODEL_DIR_PATH):
-    os.makedirs(SAVE_MODEL_DIR_PATH)
-
-  PATH = SAVE_MODEL_DIR_PATH + 'net_' + time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime())
+  # PATH = SAVE_MODEL_DIR_PATH + 'net_' + time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime())
   if(args.debug_mode):
     print('\n*************************************************')
     print('************* Running in DEBUG mode *************')
     print('*************************************************\n')
     EPOCHS = 4
-    PATH = PATH + '_Debuging'
+    # PATH = PATH + '_Debuging'
     DEBUG_FAST_EXECUTION = True
   else:
     EPOCHS = args.epochs
-    if(args.save_name):
-      PATH = PATH + '_' + args.save_name
+    # if(args.save_name):
+      # PATH = PATH + '_' + args.save_name
     DEBUG_FAST_EXECUTION = False
 
+  SavingPath(args)
   main(args)
 
   print("Total Execution Time:")

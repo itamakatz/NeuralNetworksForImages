@@ -209,13 +209,13 @@ if __name__ == '__main__':
   run_time = Running_Time()
 
   parser = argparse.ArgumentParser(description='Test cifar10')
-  parser.add_argument('--epochs', type=int, default=10, metavar='N',
+  parser.add_argument('--epochs', type=int, default=10, metavar='e',
                       help='number of epochs to train (default: 10)')
   parser.add_argument('--lr', type=float, default=0.001, metavar='LR',
                       help='learning rate (default: 0.001)')
   parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
                       help='SGD momentum (default: 0.9)')
-  parser.add_argument('--model-name', default="original",
+  parser.add_argument('--model-name', default="original", metavar='N',
                       help='Chooses the model type. (default: "original")')
   parser.add_argument('--debug-mode', action='store_true', default=False,
                       help='Switches to debug mode which overwrites all other given arguments (default: False)')

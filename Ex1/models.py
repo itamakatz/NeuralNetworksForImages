@@ -188,7 +188,7 @@ class Net(nn.Module):
 # ============== Q1_4 ============== #
 
   ''' in this net we added 3 more layers of convolution, and since the output was small, 
-      we removed a fully connected later '''
+      we removed a fully connected '''
 
   def set_model_Q1_4(self):
     self.conv1 = nn.Conv2d(3, 6, 5)
@@ -539,7 +539,10 @@ class Net(nn.Module):
 
 # ============== Q1_19 ============== #
   
-  # Total params: 550,570
+  '''We now change the approach. Instead of lowering the number of neurons, maybe the right thing is to 
+    have more convolutional parameters as opposed to fully connected ones? Therefore, we added many 
+    convolutional layers which bump it up to 128 channels! This indeed gave an incredible result 
+    meaning we are getting closer. Total params: 550,570 '''
 
   def set_model_Q1_19(self):
     self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -566,7 +569,7 @@ class Net(nn.Module):
 
 # ============== Q1_20 ============== #
   
-  # Total params: 356,810
+  '''Continuing the idea of Q1_19, but with less parameters - 356,810'''
 
   def set_model_Q1_20(self):
     self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
@@ -587,7 +590,7 @@ class Net(nn.Module):
 
 # ============== Q1_21 ============== #
   
-  # Total params: 164,234
+  '''Continuing the idea of Q1_19, but with less parameters - 164,234'''
 
   def set_model_Q1_21(self):
     self.conv1 = nn.Conv2d(3, 32, 3)
@@ -609,8 +612,8 @@ class Net(nn.Module):
     return x
 
 # ============== Q1_22 ============== #
-  
-  # Total params: 105,258
+
+  '''Continuing the idea of Q1_19, but with less parameters - 105,258'''
   
   def set_model_Q1_22(self):
     self.conv1 = nn.Conv2d(3, 32, 5)

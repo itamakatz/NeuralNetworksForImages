@@ -24,7 +24,7 @@ DEBUG_PRINT = False
 DEBUG_FAST_EXECUTION = False
 # DEBUG_FAST_EXECUTION = True
 
-SAVE_MODEL_DIR_PATH = r'./SavedModels/'
+SAVE_DIR_NAME = 'SavedModels'
 MODEL_SUFFIX = '.pth'
 FIGURE_SUFFIX = '.png'
 INFO_SUFFIX = '.txt'
@@ -221,7 +221,6 @@ if __name__ == '__main__':
                       help='Switches to debug mode which overwrites all other given arguments (default: False)')
   args = parser.parse_args()
 
-  # PATH = SAVE_MODEL_DIR_PATH + 'net_' + time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime())
   if(args.debug_mode):
     print('\n*************************************************')
     print('************* Running in DEBUG mode *************')
@@ -235,7 +234,7 @@ if __name__ == '__main__':
       # PATH = PATH + '_' + args.model_name
     DEBUG_FAST_EXECUTION = False
 
-  SavingPath(args, SAVE_MODEL_DIR_PATH)
+  SavingPath(args, SAVE_DIR_NAME)
   main(args)
 
   print("Total Execution Time:")

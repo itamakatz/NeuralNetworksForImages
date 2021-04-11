@@ -1,0 +1,108 @@
+Net(
+  (conv1): Conv2d(3, 10, kernel_size=(5, 5), stride=(1, 1))
+  (conv2): Conv2d(10, 24, kernel_size=(5, 5), stride=(1, 1))
+  (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (fc1): Linear(in_features=600, out_features=120, bias=True)
+  (fc2): Linear(in_features=120, out_features=84, bias=True)
+  (fc3): Linear(in_features=84, out_features=10, bias=True)
+  (loss_function): CrossEntropyLoss()
+)
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1           [-1, 10, 28, 28]             760
+         MaxPool2d-2           [-1, 10, 14, 14]               0
+            Conv2d-3           [-1, 24, 10, 10]           6,024
+         MaxPool2d-4             [-1, 24, 5, 5]               0
+            Linear-5                  [-1, 120]          72,120
+            Linear-6                   [-1, 84]          10,164
+            Linear-7                   [-1, 10]             850
+================================================================
+Total params: 89,918
+Trainable params: 89,918
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.10
+Params size (MB): 0.34
+Estimated Total Size (MB): 0.45
+----------------------------------------------------------------
+
+Extra info:
+Model's state_dict:
+conv1.weight 	 torch.Size([10, 3, 5, 5])
+conv1.bias 	 torch.Size([10])
+conv2.weight 	 torch.Size([24, 10, 5, 5])
+conv2.bias 	 torch.Size([24])
+fc1.weight 	 torch.Size([120, 600])
+fc1.bias 	 torch.Size([120])
+fc2.weight 	 torch.Size([84, 120])
+fc2.bias 	 torch.Size([84])
+fc3.weight 	 torch.Size([10, 84])
+fc3.bias 	 torch.Size([10])
+
+Optimizer's state_dict:
+state 	 {}
+param_groups 	 [{'lr': 0.001, 'momentum': 0.9, 'dampening': 0, 'weight_decay': 0, 'nesterov': False, 'params': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}]
+
+epoch: 1, train_loss: 1.65499126075387, train_accuracy: 0.39068, test_loss: 1.3074732127577067, test_accuracy: 0.5357
+epoch: 2, train_loss: 1.2586110835143924, train_accuracy: 0.5513, test_loss: 1.1940287057608365, test_accuracy: 0.5759
+epoch: 3, train_loss: 1.0997975942280889, train_accuracy: 0.61086, test_loss: 1.1083427568651736, test_accuracy: 0.6072
+epoch: 4, train_loss: 0.9962009761798755, train_accuracy: 0.6486, test_loss: 1.033968930490315, test_accuracy: 0.6316
+epoch: 5, train_loss: 0.9148101627403871, train_accuracy: 0.68006, test_loss: 0.9979137543857097, test_accuracy: 0.6562
+epoch: 6, train_loss: 0.8492249086927902, train_accuracy: 0.70196, test_loss: 1.0112696557068266, test_accuracy: 0.6595
+epoch: 7, train_loss: 0.7993423250248936, train_accuracy: 0.71804, test_loss: 1.0112882502615452, test_accuracy: 0.6577
+epoch: 8, train_loss: 0.7517535542661586, train_accuracy: 0.73434, test_loss: 1.074112254618341, test_accuracy: 0.647
+epoch: 9, train_loss: 0.7064851648138347, train_accuracy: 0.7498, test_loss: 1.0802945823557208, test_accuracy: 0.6532
+epoch: 10, train_loss: 0.6724542499057972, train_accuracy: 0.76034, test_loss: 1.1217717892565764, test_accuracy: 0.6473
+epoch: 11, train_loss: 0.6410427936437505, train_accuracy: 0.7706, test_loss: 1.1323682186477817, test_accuracy: 0.6498
+epoch: 12, train_loss: 0.6206762416803924, train_accuracy: 0.77824, test_loss: 1.1743891265623039, test_accuracy: 0.6435
+epoch: 13, train_loss: 0.5898162389029423, train_accuracy: 0.79052, test_loss: 1.1750054879563279, test_accuracy: 0.6542
+epoch: 14, train_loss: 0.5716935460779048, train_accuracy: 0.79492, test_loss: 1.2836497890794416, test_accuracy: 0.645
+epoch: 15, train_loss: 0.5486830790980541, train_accuracy: 0.8056, test_loss: 1.2348918374622473, test_accuracy: 0.6421
+epoch: 16, train_loss: 0.5362976607884233, train_accuracy: 0.81034, test_loss: 1.3998898679506557, test_accuracy: 0.6272
+epoch: 17, train_loss: 0.5158339691209547, train_accuracy: 0.81816, test_loss: 1.323112583326934, test_accuracy: 0.643
+epoch: 18, train_loss: 0.5081219742822074, train_accuracy: 0.82082, test_loss: 1.3856952424543847, test_accuracy: 0.6456
+epoch: 19, train_loss: 0.49593978393894567, train_accuracy: 0.8268, test_loss: 1.4265901385994508, test_accuracy: 0.6433
+epoch: 20, train_loss: 0.4839621374276682, train_accuracy: 0.83036, test_loss: 1.4320444974201498, test_accuracy: 0.6394
+epoch: 21, train_loss: 0.4771547181285654, train_accuracy: 0.83222, test_loss: 1.5484885274389646, test_accuracy: 0.6402
+epoch: 22, train_loss: 0.47358976091702165, train_accuracy: 0.83546, test_loss: 1.5482379508277153, test_accuracy: 0.6288
+epoch: 23, train_loss: 0.46598020930806755, train_accuracy: 0.83766, test_loss: 1.601840398721527, test_accuracy: 0.6337
+epoch: 24, train_loss: 0.4598833754905412, train_accuracy: 0.84028, test_loss: 1.6339692972860433, test_accuracy: 0.6268
+epoch: 25, train_loss: 0.4500028648704244, train_accuracy: 0.84628, test_loss: 1.6535780014054167, test_accuracy: 0.6307
+epoch: 26, train_loss: 0.46292773313489066, train_accuracy: 0.84206, test_loss: 1.7030286750663182, test_accuracy: 0.6307
+epoch: 27, train_loss: 0.4526721404504724, train_accuracy: 0.8447, test_loss: 1.704712628435079, test_accuracy: 0.633
+epoch: 28, train_loss: 0.4515579913345475, train_accuracy: 0.8461, test_loss: 1.712650077132079, test_accuracy: 0.6303
+epoch: 29, train_loss: 0.45196119501713417, train_accuracy: 0.84708, test_loss: 1.8266511022486556, test_accuracy: 0.6241
+epoch: 30, train_loss: 0.44097072583216856, train_accuracy: 0.8513, test_loss: 1.7980307279805816, test_accuracy: 0.6281
+epoch: 31, train_loss: 0.43416953113251394, train_accuracy: 0.853, test_loss: 1.948624579012521, test_accuracy: 0.6173
+epoch: 32, train_loss: 0.43862057675142563, train_accuracy: 0.8517, test_loss: 2.0576529614611294, test_accuracy: 0.6153
+epoch: 33, train_loss: 0.44598975928393186, train_accuracy: 0.85116, test_loss: 1.8343410562392841, test_accuracy: 0.6255
+epoch: 34, train_loss: 0.4491742761792157, train_accuracy: 0.8509, test_loss: 1.8515878882677916, test_accuracy: 0.6253
+epoch: 35, train_loss: 0.4416254809012897, train_accuracy: 0.8543, test_loss: 1.9190840954220465, test_accuracy: 0.6132
+epoch: 36, train_loss: 0.4443395264897603, train_accuracy: 0.85364, test_loss: 1.8693439525320252, test_accuracy: 0.6209
+epoch: 37, train_loss: 0.4504202318013839, train_accuracy: 0.85226, test_loss: 1.9062096147571104, test_accuracy: 0.6251
+epoch: 38, train_loss: 0.44077875310487113, train_accuracy: 0.85674, test_loss: 1.8659702558019629, test_accuracy: 0.613
+epoch: 39, train_loss: 0.4362557525824629, train_accuracy: 0.85788, test_loss: 2.08661489055833, test_accuracy: 0.6227
+epoch: 40, train_loss: 0.43680781499604826, train_accuracy: 0.8599, test_loss: 1.981369681267542, test_accuracy: 0.6102
+epoch: 41, train_loss: 0.44644562974357244, train_accuracy: 0.8555, test_loss: 2.0065926882056178, test_accuracy: 0.6185
+epoch: 42, train_loss: 0.44474775090963536, train_accuracy: 0.8565, test_loss: 2.0570911608727527, test_accuracy: 0.6039
+epoch: 43, train_loss: 0.44329412722565553, train_accuracy: 0.85832, test_loss: 2.186082941692567, test_accuracy: 0.6058
+epoch: 44, train_loss: 0.4472336747346542, train_accuracy: 0.85784, test_loss: 2.1446875293414918, test_accuracy: 0.6076
+epoch: 45, train_loss: 0.4363802690549009, train_accuracy: 0.86032, test_loss: 2.2457087108819405, test_accuracy: 0.605
+epoch: 46, train_loss: 0.44306037386534064, train_accuracy: 0.86084, test_loss: 2.039158204650887, test_accuracy: 0.6181
+epoch: 47, train_loss: 0.45645124577886925, train_accuracy: 0.85644, test_loss: 2.181184361093964, test_accuracy: 0.6185
+epoch: 48, train_loss: 0.4450838842031537, train_accuracy: 0.85954, test_loss: 2.234136791618843, test_accuracy: 0.6152
+epoch: 49, train_loss: 0.44485752626224073, train_accuracy: 0.86086, test_loss: 2.1657375960719514, test_accuracy: 0.6253
+epoch: 50, train_loss: 0.4497546032602076, train_accuracy: 0.8604, test_loss: 2.2041587682438655, test_accuracy: 0.622
+
+Accuracy of plane : 68 %
+Accuracy of   car : 77 %
+Accuracy of  bird : 55 %
+Accuracy of   cat : 41 %
+Accuracy of  deer : 54 %
+Accuracy of   dog : 53 %
+Accuracy of  frog : 62 %
+Accuracy of horse : 68 %
+Accuracy of  ship : 75 %
+Accuracy of truck : 66 %

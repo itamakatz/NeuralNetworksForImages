@@ -72,7 +72,8 @@ class Net(nn.Module):
       ModelType.Q1_20: self.set_model_Q1_20,
       ModelType.Q1_21: self.set_model_Q1_21,
       ModelType.Q1_22: self.set_model_Q1_22,
-      ModelType.Q2: self.set_model_Q2,
+      ModelType.Q2_1: self.set_model_Q2_1,
+      ModelType.Q2_2: self.set_model_Q2_2,
     }
     self._forward_mapping = {
       ModelType.ORIGINAL: self.forward_Original,
@@ -98,7 +99,8 @@ class Net(nn.Module):
       ModelType.Q1_20: self.forward_Q1_20,
       ModelType.Q1_21: self.forward_Q1_21,
       ModelType.Q1_22: self.forward_Q1_22,
-      ModelType.Q2: self.forward_Q2,
+      ModelType.Q2_1: self.forward_Q2_1,
+      ModelType.Q2_2: self.forward_Q2_2,
     }
 
 # ============== Original ============== #
@@ -642,17 +644,36 @@ class Net(nn.Module):
 #     x = self.fc2(x)
 #     return x
 
-# ============== Q2 ============== # 
+# ============== Q2_1 ============== # 
 
 # Q2 - delete the non-linear layers
-  def set_model_Q2(self):
+  def set_model_Q2_1(self):
     self.conv1 = nn.Conv2d(3, 6, 5)
     self.conv2 = nn.Conv2d(6, 16, 5)
     self.fc1 = nn.Linear(16 * 24 * 24, 120)
     self.fc2 = nn.Linear(120, 84)
     self.fc3 = nn.Linear(84, 10)
 
-  def forward_Q2(self, x):
+  def forward_Q2_1(self, x):
+      x = self.conv1(x)
+      x = self.conv2(x)
+      x = x.view(-1, 16 * 24 * 24) # reshapes for the fully connected
+      x = self.fc1(x)
+      x = self.fc2(x)
+      x = self.fc3(x)
+      return x
+
+# ============== Q2_2 ============== # 
+
+# Q2 - delete the non-linear layers
+  def set_model_Q2_2(self):
+    self.conv1 = nn.Conv2d(3, 6, 5)
+    self.conv2 = nn.Conv2d(6, 16, 5)
+    self.fc1 = nn.Linear(16 * 24 * 24, 120)
+    self.fc2 = nn.Linear(120, 110)
+    self.fc3 = nn.Linear(110, 10)
+
+  def forward_Q2_2(self, x):
       x = self.conv1(x)
       x = self.conv2(x)
       x = x.view(-1, 16 * 24 * 24) # reshapes for the fully connected
@@ -696,7 +717,8 @@ class ModelType(enum.Enum):
   Q1_20 = 21
   Q1_21 = 22
   Q1_22 = 23
-  Q2 = 24
+  Q2_1 = 24
+  Q2_2 = 24
 
   @staticmethod
   # parse a string name and get the corresponding enum
@@ -725,7 +747,8 @@ class ModelType(enum.Enum):
         "Q1_20".lower(): ModelType.Q1_20,
         "Q1_21".lower(): ModelType.Q1_21,
         "Q1_22".lower(): ModelType.Q1_22,
-        "Q2".lower(): ModelType.Q2,
+        "Q2_1".lower(): ModelType.Q2_1,
+        "Q2_2".lower(): ModelType.Q2_2,
     }
 
     if(model_name.lower() in models_dict):

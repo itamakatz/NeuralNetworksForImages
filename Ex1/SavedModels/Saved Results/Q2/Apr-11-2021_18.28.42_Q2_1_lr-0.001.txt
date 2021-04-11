@@ -1,0 +1,70 @@
+Net(
+  (conv1): Conv2d(3, 6, kernel_size=(5, 5), stride=(1, 1))
+  (conv2): Conv2d(6, 16, kernel_size=(5, 5), stride=(1, 1))
+  (fc1): Linear(in_features=9216, out_features=120, bias=True)
+  (fc2): Linear(in_features=120, out_features=110, bias=True)
+  (fc3): Linear(in_features=110, out_features=10, bias=True)
+  (loss_function): CrossEntropyLoss()
+)
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1            [-1, 6, 28, 28]             456
+            Conv2d-2           [-1, 16, 24, 24]           2,416
+            Linear-3                  [-1, 120]       1,106,040
+            Linear-4                  [-1, 110]          13,310
+            Linear-5                   [-1, 10]           1,110
+================================================================
+Total params: 1,123,332
+Trainable params: 1,123,332
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.11
+Params size (MB): 4.29
+Estimated Total Size (MB): 4.40
+----------------------------------------------------------------
+
+Extra info:
+Model's state_dict:
+conv1.weight 	 torch.Size([6, 3, 5, 5])
+conv1.bias 	 torch.Size([6])
+conv2.weight 	 torch.Size([16, 6, 5, 5])
+conv2.bias 	 torch.Size([16])
+fc1.weight 	 torch.Size([120, 9216])
+fc1.bias 	 torch.Size([120])
+fc2.weight 	 torch.Size([110, 120])
+fc2.bias 	 torch.Size([110])
+fc3.weight 	 torch.Size([10, 110])
+fc3.bias 	 torch.Size([10])
+
+Optimizer's state_dict:
+state 	 {}
+param_groups 	 [{'lr': 0.001, 'momentum': 0.9, 'dampening': 0, 'weight_decay': 0, 'nesterov': False, 'params': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}]
+
+epoch: 1, train_loss: 1.870275924425125, train_accuracy: 0.34524, test_loss: 1.8427276519060134, test_accuracy: 0.3484
+epoch: 2, train_loss: 1.823137991452217, train_accuracy: 0.36822, test_loss: 1.799694032406807, test_accuracy: 0.374
+epoch: 3, train_loss: 1.8136835430383682, train_accuracy: 0.37238, test_loss: 1.8242661198139192, test_accuracy: 0.3669
+epoch: 4, train_loss: 1.8090520970058441, train_accuracy: 0.3775, test_loss: 1.8052628697872162, test_accuracy: 0.3642
+epoch: 5, train_loss: 1.800371551837921, train_accuracy: 0.37636, test_loss: 1.8261841340184213, test_accuracy: 0.365
+epoch: 6, train_loss: 1.795850206680298, train_accuracy: 0.38208, test_loss: 1.8349634643375874, test_accuracy: 0.3628
+epoch: 7, train_loss: 1.7901314343833923, train_accuracy: 0.38414, test_loss: 1.8647503839731217, test_accuracy: 0.3561
+epoch: 8, train_loss: 1.7879867762255668, train_accuracy: 0.3831, test_loss: 1.863480415892601, test_accuracy: 0.3469
+epoch: 9, train_loss: 1.782529657831192, train_accuracy: 0.38564, test_loss: 1.8663148325562477, test_accuracy: 0.3527
+epoch: 10, train_loss: 1.780775528279543, train_accuracy: 0.38704, test_loss: 1.7830490656375886, test_accuracy: 0.3901
+epoch: 11, train_loss: 1.7789789445328712, train_accuracy: 0.3893, test_loss: 1.834853929412365, test_accuracy: 0.3574
+epoch: 12, train_loss: 1.7723126609373092, train_accuracy: 0.39102, test_loss: 1.811001731491089, test_accuracy: 0.3663
+epoch: 13, train_loss: 1.7685801862406731, train_accuracy: 0.39152, test_loss: 1.8954141618728637, test_accuracy: 0.3408
+epoch: 14, train_loss: 1.7674017439126968, train_accuracy: 0.39424, test_loss: 1.9217072040081025, test_accuracy: 0.3268
+epoch: 15, train_loss: 1.7660739438915252, train_accuracy: 0.3946, test_loss: 1.8676251343011856, test_accuracy: 0.3493
+
+Accuracy of plane : 39 %
+Accuracy of   car : 34 %
+Accuracy of  bird : 27 %
+Accuracy of   cat : 19 %
+Accuracy of  deer : 27 %
+Accuracy of   dog : 36 %
+Accuracy of  frog : 24 %
+Accuracy of horse : 48 %
+Accuracy of  ship : 46 %
+Accuracy of truck : 45 %

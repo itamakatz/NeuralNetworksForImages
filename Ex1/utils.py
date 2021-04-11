@@ -13,57 +13,11 @@ class Running_Time:
         current_time = time.time()
         # print("Total Execution Time:")
         return f"{((current_time - self.start_time)//60):.0f}:{(current_time - self.start_time)%60:.0f} min:sec"
-
-class Execution_Time:
-
-    executions_time = None
-    executions_time_with_microsec = None
-    __isInitialized = False
-
-    def __init__(self):
-        Execution_Time.__set_executions_time()
-
-    # def get_executions_time(self, add_microsec=False):
-    #     if(add_microsec): return self.executions_time
-    #     else: return self.executions_time_with_microsec
-
-    # def _set_executions_time(self, add_microsec=False):
-    #     time = datetime.today()
-    #     self.executions_time = time.strftime('%Y-%m-%d_%H-%M-%S.%f')
-    #     self.executions_time_with_microsec = time.strftime('%Y-%m-%d_%H-%M-%S')
-    #     Execution_Time.executions_time = self.executions_time
-    #     Execution_Time.executions_time_with_microsec = self.executions_time_with_microsec
-
-    @staticmethod
-    def initialize():
-        Execution_Time.__set_executions_time()
-
-    @staticmethod
-    def get_executions_time(add_microsec=False):
-        if(not Execution_Time.__isInitialized):
-            Execution_Time.__set_executions_time()
-        if(add_microsec): return Execution_Time.executions_time
-        else: return Execution_Time.executions_time_with_microsec
-
-    @staticmethod
-    def __set_executions_time(add_microsec=False):
-        if(Execution_Time.__isInitialized):
-           return 
-        time = datetime.today()
-        Execution_Time.executions_time = time.strftime('%Y-%m-%d_%H-%M-%S.%f')
-        Execution_Time.executions_time_with_microsec = time.strftime('%Y-%m-%d_%H-%M-%S')
-        Execution_Time.__isInitialized = True
-
-
-def get_new_executions_time(add_microsec=False):
-    if(add_microsec): return datetime.today().strftime('%Y-%m-%d_%H-%M-%S.%f')
-    else: return datetime.today().strftime('%Y-%m-%d_%H-%M-%S')        
-
-
-
+    
 class SavingPath():
 
-  def __init__(self, args, saveModelDirPath):
+  def __init__(self, args, saveDirName):
+    
     SavingPath._lr = args.lr
     if(args.debug_mode):
       SavingPath._model_name = "_Debugging"
@@ -73,10 +27,13 @@ class SavingPath():
       else:
         SavingPath._model_name = ""
 
-    if not os.path.exists(saveModelDirPath):
-      os.makedirs(saveModelDirPath)
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    savePath = os.path.join(dir_path, saveDirName)
 
-    SavingPath._path = saveModelDirPath + time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime()) + SavingPath._model_name + "_lr-" + str(SavingPath._lr)
+    if not os.path.exists(savePath):
+      os.makedirs(savePath)
+
+    SavingPath._path = os.path.join(savePath, time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime()) + SavingPath._model_name + "_lr-" + str(SavingPath._lr))
     
   @staticmethod
   def get_path(epoch = -1, suffix = ""):

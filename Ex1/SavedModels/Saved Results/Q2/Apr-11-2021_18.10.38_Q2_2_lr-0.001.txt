@@ -1,0 +1,60 @@
+Net(
+  (conv1): Conv2d(3, 6, kernel_size=(5, 5), stride=(1, 1))
+  (conv2): Conv2d(6, 16, kernel_size=(5, 5), stride=(1, 1))
+  (fc1): Linear(in_features=9216, out_features=120, bias=True)
+  (fc2): Linear(in_features=120, out_features=110, bias=True)
+  (fc3): Linear(in_features=110, out_features=10, bias=True)
+  (loss_function): CrossEntropyLoss()
+)
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1            [-1, 6, 28, 28]             456
+            Conv2d-2           [-1, 16, 24, 24]           2,416
+            Linear-3                  [-1, 120]       1,106,040
+            Linear-4                  [-1, 110]          13,310
+            Linear-5                   [-1, 10]           1,110
+================================================================
+Total params: 1,123,332
+Trainable params: 1,123,332
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.11
+Params size (MB): 4.29
+Estimated Total Size (MB): 4.40
+----------------------------------------------------------------
+
+Extra info:
+Model's state_dict:
+conv1.weight 	 torch.Size([6, 3, 5, 5])
+conv1.bias 	 torch.Size([6])
+conv2.weight 	 torch.Size([16, 6, 5, 5])
+conv2.bias 	 torch.Size([16])
+fc1.weight 	 torch.Size([120, 9216])
+fc1.bias 	 torch.Size([120])
+fc2.weight 	 torch.Size([110, 120])
+fc2.bias 	 torch.Size([110])
+fc3.weight 	 torch.Size([10, 110])
+fc3.bias 	 torch.Size([10])
+
+Optimizer's state_dict:
+state 	 {}
+param_groups 	 [{'lr': 0.001, 'momentum': 0.9, 'dampening': 0, 'weight_decay': 0, 'nesterov': False, 'params': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}]
+
+epoch: 1, train_loss: 1.8756425207448006, train_accuracy: 0.34078, test_loss: 1.7987124880552292, test_accuracy: 0.3685
+epoch: 2, train_loss: 1.8239314517307281, train_accuracy: 0.36736, test_loss: 1.8157952284455299, test_accuracy: 0.375
+epoch: 3, train_loss: 1.8154401262545585, train_accuracy: 0.37384, test_loss: 1.8004508545279503, test_accuracy: 0.373
+epoch: 4, train_loss: 1.8071638327932358, train_accuracy: 0.37566, test_loss: 1.7951623501539231, test_accuracy: 0.3792
+epoch: 5, train_loss: 1.8004906846785544, train_accuracy: 0.37996, test_loss: 1.8217911676168441, test_accuracy: 0.3735
+epoch: 6, train_loss: 1.7959780354881287, train_accuracy: 0.38064, test_loss: 1.8082874215841294, test_accuracy: 0.3636
+epoch: 7, train_loss: 1.791891806769371, train_accuracy: 0.38228, test_loss: 1.8498593210935592, test_accuracy: 0.3559
+epoch: 8, train_loss: 1.7872495152902603, train_accuracy: 0.38534, test_loss: 1.8162662870407105, test_accuracy: 0.3691
+epoch: 9, train_loss: 1.7853671271657943, train_accuracy: 0.3814, test_loss: 1.886517416882515, test_accuracy: 0.3489
+epoch: 10, train_loss: 1.7816548666512966, train_accuracy: 0.38798, test_loss: 1.826528366780281, test_accuracy: 0.356
+epoch: 11, train_loss: 1.7752433735144137, train_accuracy: 0.3904, test_loss: 1.8764864131450654, test_accuracy: 0.3769
+epoch: 12, train_loss: 1.7754401811861993, train_accuracy: 0.3879, test_loss: 1.8310407084465028, test_accuracy: 0.3595
+epoch: 13, train_loss: 1.7718474155294894, train_accuracy: 0.39048, test_loss: 1.8177840262055398, test_accuracy: 0.3667
+epoch: 14, train_loss: 1.7687027077305317, train_accuracy: 0.38914, test_loss: 1.8260202791810036, test_accuracy: 0.3661
+epoch: 15, train_loss: 1.7670229179525376, train_accuracy: 0.39194, test_loss: 1.8555785997629166, test_accuracy: 0.3449
+epoch: 16, train_loss: 1.7639897518110275, train_accuracy: 0.39232, test_loss: 1.8544248407006263, test_accuracy: 0.3475

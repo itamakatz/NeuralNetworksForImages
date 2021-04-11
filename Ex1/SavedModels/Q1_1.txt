@@ -1,0 +1,73 @@
+Net(
+  (conv1): Conv2d(3, 6, kernel_size=(5, 5), stride=(1, 1))
+  (conv2): Conv2d(6, 16, kernel_size=(5, 5), stride=(1, 1))
+  (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (fc1): Linear(in_features=400, out_features=120, bias=True)
+  (fc2): Linear(in_features=120, out_features=84, bias=True)
+  (fc3): Linear(in_features=84, out_features=10, bias=True)
+  (loss_function): CrossEntropyLoss()
+)
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1            [-1, 6, 28, 28]             456
+         MaxPool2d-2            [-1, 6, 14, 14]               0
+            Conv2d-3           [-1, 16, 10, 10]           2,416
+         MaxPool2d-4             [-1, 16, 5, 5]               0
+            Linear-5                  [-1, 120]          48,120
+            Linear-6                   [-1, 84]          10,164
+            Linear-7                   [-1, 10]             850
+================================================================
+Total params: 62,006
+Trainable params: 62,006
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.06
+Params size (MB): 0.24
+Estimated Total Size (MB): 0.31
+----------------------------------------------------------------
+
+Extra info:
+Model's state_dict:
+conv1.weight 	 torch.Size([6, 3, 5, 5])
+conv1.bias 	 torch.Size([6])
+conv2.weight 	 torch.Size([16, 6, 5, 5])
+conv2.bias 	 torch.Size([16])
+fc1.weight 	 torch.Size([120, 400])
+fc1.bias 	 torch.Size([120])
+fc2.weight 	 torch.Size([84, 120])
+fc2.bias 	 torch.Size([84])
+fc3.weight 	 torch.Size([10, 84])
+fc3.bias 	 torch.Size([10])
+
+Optimizer's state_dict:
+state 	 {}
+param_groups 	 [{'lr': 0.001, 'momentum': 0.9, 'dampening': 0, 'weight_decay': 0, 'nesterov': False, 'params': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}]
+
+epoch: 1, train_loss: 1.716684458732605, train_accuracy: 0.36756, test_loss: 1.4295535791754723, test_accuracy: 0.4767
+epoch: 2, train_loss: 1.3557398097956181, train_accuracy: 0.51414, test_loss: 1.2566645655304194, test_accuracy: 0.5518
+epoch: 3, train_loss: 1.2290105197638272, train_accuracy: 0.56106, test_loss: 1.2567973095953464, test_accuracy: 0.5614
+epoch: 4, train_loss: 1.1383362721107155, train_accuracy: 0.59662, test_loss: 1.242731636711955, test_accuracy: 0.5741
+epoch: 5, train_loss: 1.0667041944796591, train_accuracy: 0.6217, test_loss: 1.180332096719742, test_accuracy: 0.6023
+epoch: 6, train_loss: 1.017078272715807, train_accuracy: 0.64228, test_loss: 1.1687824451699853, test_accuracy: 0.592
+epoch: 7, train_loss: 0.9729779314919561, train_accuracy: 0.65762, test_loss: 1.147940999022126, test_accuracy: 0.605
+epoch: 8, train_loss: 0.9372327697117254, train_accuracy: 0.66854, test_loss: 1.1304560591578483, test_accuracy: 0.6172
+epoch: 9, train_loss: 0.9082612001259159, train_accuracy: 0.67678, test_loss: 1.1842685580968857, test_accuracy: 0.6073
+epoch: 10, train_loss: 0.8710629670354887, train_accuracy: 0.68876, test_loss: 1.1563567606974394, test_accuracy: 0.6188
+epoch: 11, train_loss: 0.8503247326007206, train_accuracy: 0.69774, test_loss: 1.1879333012543618, test_accuracy: 0.6032
+epoch: 12, train_loss: 0.8257780730706453, train_accuracy: 0.70582, test_loss: 1.239190590470098, test_accuracy: 0.6008
+epoch: 13, train_loss: 0.8001350175577728, train_accuracy: 0.71468, test_loss: 1.2440831644497812, test_accuracy: 0.6036
+epoch: 14, train_loss: 0.7816241572482954, train_accuracy: 0.72292, test_loss: 1.2550867429248989, test_accuracy: 0.6044
+epoch: 15, train_loss: 0.7676932064665548, train_accuracy: 0.72784, test_loss: 1.2646568820804358, test_accuracy: 0.6071
+
+Accuracy of plane : 68 %
+Accuracy of   car : 81 %
+Accuracy of  bird : 52 %
+Accuracy of   cat : 39 %
+Accuracy of  deer : 47 %
+Accuracy of   dog : 50 %
+Accuracy of  frog : 70 %
+Accuracy of horse : 56 %
+Accuracy of  ship : 72 %
+Accuracy of truck : 68 %

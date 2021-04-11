@@ -101,22 +101,24 @@ class ModelStatistics():
     for name in plotNames:
       self.listDict[name] = PlotData(length)
 
-  def AddData(self, name, x, y):
+  def addData(self, name, x, y):
     if(self.listDict[name].isFull()):
       raise Exception("Array is full. Possibly initialized with the wrong length")
     self.listDict[name].valuesList[0][self.listDict[name].index] = x
     self.listDict[name].valuesList[1][self.listDict[name].index] = y
     self.listDict[name].index = self.listDict[name].index + 1
 
-  def Show(self):
+  def show(self):
     self.ax.cla()
     for name in self.listDict.keys():
       self.ax.plot(self.listDict[name].valuesList[0][:self.listDict[name].index], self.listDict[name].valuesList[1][:self.listDict[name].index], label=name)
     self.fig.legend()
     self.fig.show()
 
-  def Save(self, path):
+  def save(self, path, title=""):
     self.ax.cla()
+    if(title):
+      self.fig.suptitle(title, fontsize=12)
     for name in self.listDict.keys():
       self.ax.plot(self.listDict[name].valuesList[0][:self.listDict[name].index], self.listDict[name].valuesList[1][:self.listDict[name].index], label=name)
     self.fig.legend()

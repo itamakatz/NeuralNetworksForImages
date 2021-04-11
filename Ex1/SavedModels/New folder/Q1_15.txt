@@ -1,0 +1,80 @@
+Net(
+  (conv1): Conv2d(3, 6, kernel_size=(5, 5), stride=(1, 1))
+  (conv2): Conv2d(6, 12, kernel_size=(5, 5), stride=(1, 1))
+  (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (fc1): Linear(in_features=300, out_features=120, bias=True)
+  (fc2): Linear(in_features=120, out_features=84, bias=True)
+  (fc3): Linear(in_features=84, out_features=10, bias=True)
+  (loss_function): CrossEntropyLoss()
+)
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1            [-1, 6, 28, 28]             456
+         MaxPool2d-2            [-1, 6, 14, 14]               0
+            Conv2d-3           [-1, 12, 10, 10]           1,812
+         MaxPool2d-4             [-1, 12, 5, 5]               0
+            Linear-5                  [-1, 120]          36,120
+            Linear-6                   [-1, 84]          10,164
+            Linear-7                   [-1, 10]             850
+================================================================
+Total params: 49,402
+Trainable params: 49,402
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.06
+Params size (MB): 0.19
+Estimated Total Size (MB): 0.26
+----------------------------------------------------------------
+
+Extra info:
+Model's state_dict:
+conv1.weight 	 torch.Size([6, 3, 5, 5])
+conv1.bias 	 torch.Size([6])
+conv2.weight 	 torch.Size([12, 6, 5, 5])
+conv2.bias 	 torch.Size([12])
+fc1.weight 	 torch.Size([120, 300])
+fc1.bias 	 torch.Size([120])
+fc2.weight 	 torch.Size([84, 120])
+fc2.bias 	 torch.Size([84])
+fc3.weight 	 torch.Size([10, 84])
+fc3.bias 	 torch.Size([10])
+
+Optimizer's state_dict:
+state 	 {}
+param_groups 	 [{'lr': 0.001, 'momentum': 0.9, 'dampening': 0, 'weight_decay': 0, 'nesterov': False, 'params': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}]
+
+epoch: 1, train_loss: 1.7342853440403938, train_accuracy: 0.36324, test_loss: 1.4844356837630273, test_accuracy: 0.4592
+epoch: 2, train_loss: 1.3564953981369734, train_accuracy: 0.51464, test_loss: 1.2819354400157927, test_accuracy: 0.5429
+epoch: 3, train_loss: 1.2310938854786753, train_accuracy: 0.56384, test_loss: 1.2329823708295822, test_accuracy: 0.5681
+epoch: 4, train_loss: 1.14272909248814, train_accuracy: 0.59486, test_loss: 1.1662355174839496, test_accuracy: 0.5949
+epoch: 5, train_loss: 1.0754662361668796, train_accuracy: 0.62084, test_loss: 1.2013808723291381, test_accuracy: 0.5906
+epoch: 6, train_loss: 1.0233940556735546, train_accuracy: 0.64066, test_loss: 1.097067976227589, test_accuracy: 0.6213
+epoch: 7, train_loss: 0.979210068400316, train_accuracy: 0.65544, test_loss: 1.1136982288176194, test_accuracy: 0.6109
+epoch: 8, train_loss: 0.9407834989113361, train_accuracy: 0.66974, test_loss: 1.1396184826390818, test_accuracy: 0.6106
+epoch: 9, train_loss: 0.909905695010107, train_accuracy: 0.6793, test_loss: 1.1112368486740276, test_accuracy: 0.6293
+epoch: 10, train_loss: 0.885033995812079, train_accuracy: 0.69032, test_loss: 1.1650301649385715, test_accuracy: 0.6088
+epoch: 11, train_loss: 0.8638496822871174, train_accuracy: 0.69496, test_loss: 1.1227610010154545, test_accuracy: 0.6271
+epoch: 12, train_loss: 0.8411264222463639, train_accuracy: 0.70208, test_loss: 1.1246015035179036, test_accuracy: 0.6304
+epoch: 13, train_loss: 0.8236327261876295, train_accuracy: 0.70988, test_loss: 1.2343611341950949, test_accuracy: 0.6139
+epoch: 14, train_loss: 0.8000473421593616, train_accuracy: 0.71748, test_loss: 1.2087376941165886, test_accuracy: 0.6189
+epoch: 15, train_loss: 0.789476549395012, train_accuracy: 0.719, test_loss: 1.192905110925529, test_accuracy: 0.6149
+epoch: 16, train_loss: 0.7767035507036117, train_accuracy: 0.72534, test_loss: 1.2211093471649104, test_accuracy: 0.6152
+epoch: 17, train_loss: 0.7706199716850824, train_accuracy: 0.72568, test_loss: 1.2017805207359604, test_accuracy: 0.623
+epoch: 18, train_loss: 0.7547764822246913, train_accuracy: 0.73414, test_loss: 1.2239162864203799, test_accuracy: 0.6271
+epoch: 19, train_loss: 0.745153676510281, train_accuracy: 0.73726, test_loss: 1.2644077912330016, test_accuracy: 0.613
+epoch: 20, train_loss: 0.7375079534572259, train_accuracy: 0.74042, test_loss: 1.2550364779040464, test_accuracy: 0.6197
+epoch: 21, train_loss: 0.7302461881448474, train_accuracy: 0.74372, test_loss: 1.3767843859163578, test_accuracy: 0.595
+epoch: 22, train_loss: 0.7209077007186853, train_accuracy: 0.74636, test_loss: 1.3420621953822305, test_accuracy: 0.604
+epoch: 23, train_loss: 0.7104140079133169, train_accuracy: 0.75008, test_loss: 1.3401654855170055, test_accuracy: 0.6113
+epoch: 24, train_loss: 0.7083574287670508, train_accuracy: 0.75086, test_loss: 1.3172820087720645, test_accuracy: 0.6138
+epoch: 25, train_loss: 0.7031494331976719, train_accuracy: 0.75498, test_loss: 1.3623204722407622, test_accuracy: 0.6135
+epoch: 26, train_loss: 0.6950051806208957, train_accuracy: 0.75638, test_loss: 1.4042478988360148, test_accuracy: 0.6218
+epoch: 27, train_loss: 0.694627348103967, train_accuracy: 0.75768, test_loss: 1.3973615596562787, test_accuracy: 0.6094
+epoch: 28, train_loss: 0.6893306136193953, train_accuracy: 0.76004, test_loss: 1.4152690628016484, test_accuracy: 0.6102
+epoch: 29, train_loss: 0.6876689187231584, train_accuracy: 0.75814, test_loss: 1.4523543049606638, test_accuracy: 0.6113
+epoch: 30, train_loss: 0.6879877580081709, train_accuracy: 0.75982, test_loss: 1.402769657372896, test_accuracy: 0.6013
+epoch: 31, train_loss: 0.6736042795239021, train_accuracy: 0.76548, test_loss: 1.5355647127643286, test_accuracy: 0.6048
+epoch: 32, train_loss: 0.6758651834231539, train_accuracy: 0.76324, test_loss: 1.4125578523535485, test_accuracy: 0.6109
+epoch: 33, train_loss: 0.6732973793441998, train_accuracy: 0.76646, test_loss: 1.4561634210742078, test_accuracy: 0.6054

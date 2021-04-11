@@ -70,6 +70,8 @@ class Net(nn.Module):
       ModelType.Q1_18: self.set_model_Q1_18,
       ModelType.Q1_19: self.set_model_Q1_19,
       ModelType.Q1_20: self.set_model_Q1_20,
+      ModelType.Q1_21: self.set_model_Q1_21,
+      ModelType.Q1_22: self.set_model_Q1_22,
       ModelType.Q2: self.set_model_Q2,
     }
     self._forward_mapping = {
@@ -94,6 +96,8 @@ class Net(nn.Module):
       ModelType.Q1_18: self.forward_Q1_18,
       ModelType.Q1_19: self.forward_Q1_19,
       ModelType.Q1_20: self.forward_Q1_20,
+      ModelType.Q1_21: self.forward_Q1_21,
+      ModelType.Q1_22: self.forward_Q1_22,
       ModelType.Q2: self.forward_Q2,
     }
 
@@ -489,8 +493,8 @@ class Net(nn.Module):
 
 # ============== Q1_17 ============== #
   
-  ''' obviously we still have overfitting. so we shall aggressively start from low and go up from there.
-      Changed the conv layer to max of 6 channels and lowering the fully connected respectively'''
+  ''' obviously we still have overfitting. So changed the conv layer to max of 6 channels and lowering the fully connected respectively
+      Resulting in 30,044 parameters to learn.'''
 
   def set_model_Q1_17(self):
     self.conv1 = nn.Conv2d(3, 4, 5)
@@ -511,22 +515,21 @@ class Net(nn.Module):
 
 # ============== Q1_18 ============== #
   
-  ''' to try to avoid overfitting, here we simply lower the number of channels of the last conv layer to 14'''
-  
+  ''' obviously we still have overfitting. So changed the conv layer to max of 5 channels and lowering the fully connected respectively
+      Total params: 26,943'''
+
   def set_model_Q1_18(self):
-    raise Exception(f"No such model named: {self.model_name}")
-    self.conv1 = nn.Conv2d(3, 6, 5)
-    self.conv2 = nn.Conv2d(6, 16, 5)
+    self.conv1 = nn.Conv2d(3, 4, 5)
+    self.conv2 = nn.Conv2d(4, 5, 5)
     self.pool = nn.MaxPool2d(2, 2)
-    self.fc1 = nn.Linear(16 * 5 * 5, 120)
+    self.fc1 = nn.Linear(5 * 5 * 5, 120)
     self.fc2 = nn.Linear(120, 84)
     self.fc3 = nn.Linear(84, 10)
 
   def forward_Q1_18(self, x):
-    raise Exception(f"No such model named: {self.model_name}")
     x = self.pool(F.relu(self.conv1(x)))
     x = self.pool(F.relu(self.conv2(x)))
-    x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
+    x = x.view(-1, 5 * 5 * 5) # reshapes for the fully connected
     x = F.relu(self.fc1(x))
     x = F.relu(self.fc2(x))
     x = self.fc3(x)
@@ -534,49 +537,110 @@ class Net(nn.Module):
 
 # ============== Q1_19 ============== #
   
-  ''' to try to avoid overfitting, here we simply lower the number of channels of the last conv layer to 14'''
-  
+  # Total params: 550,570
+
   def set_model_Q1_19(self):
-    raise Exception(f"No such model named: {self.model_name}")
-    self.conv1 = nn.Conv2d(3, 6, 5)
-    self.conv2 = nn.Conv2d(6, 16, 5)
+    self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+    self.conv2 = nn.Conv2d(32, 32, 3, padding=1)
+    self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
+    self.conv4 = nn.Conv2d(64, 64, 3, padding=1)
+    self.conv5 = nn.Conv2d(64, 128, 3, padding=1)
+    self.conv6 = nn.Conv2d(128, 128, 3, padding=1)
     self.pool = nn.MaxPool2d(2, 2)
-    self.fc1 = nn.Linear(16 * 5 * 5, 120)
-    self.fc2 = nn.Linear(120, 84)
-    self.fc3 = nn.Linear(84, 10)
+    self.fc1 = nn.Linear(128 * 4 * 4, 128)
+    self.fc2 = nn.Linear(128, 10)
 
   def forward_Q1_19(self, x):
-    raise Exception(f"No such model named: {self.model_name}")
-    x = self.pool(F.relu(self.conv1(x)))
+    x = F.relu(self.conv1(x))
     x = self.pool(F.relu(self.conv2(x)))
-    x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
+    x = F.relu(self.conv3(x))
+    x = self.pool(F.relu(self.conv4(x)))
+    x = F.relu(self.conv5(x))
+    x = self.pool(F.relu(self.conv6(x)))
+    x = x.view(-1, 128 * 4 * 4) # reshapes for the fully connected
     x = F.relu(self.fc1(x))
-    x = F.relu(self.fc2(x))
-    x = self.fc3(x)
+    x = self.fc2(x)
     return x
 
 # ============== Q1_20 ============== #
   
-  ''' to try to avoid overfitting, here we simply lower the number of channels of the last conv layer to 14'''
-  
+  # Total params: 356,810
+
   def set_model_Q1_20(self):
-    raise Exception(f"No such model named: {self.model_name}")
-    self.conv1 = nn.Conv2d(3, 6, 5)
-    self.conv2 = nn.Conv2d(6, 16, 5)
+    self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+    self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+    self.conv3 = nn.Conv2d(64, 128, 3, padding=1)
     self.pool = nn.MaxPool2d(2, 2)
-    self.fc1 = nn.Linear(16 * 5 * 5, 120)
-    self.fc2 = nn.Linear(120, 84)
-    self.fc3 = nn.Linear(84, 10)
+    self.fc1 = nn.Linear(128 * 4 * 4, 128)
+    self.fc2 = nn.Linear(128, 10)
 
   def forward_Q1_20(self, x):
-    raise Exception(f"No such model named: {self.model_name}")
     x = self.pool(F.relu(self.conv1(x)))
     x = self.pool(F.relu(self.conv2(x)))
-    x = x.view(-1, 16 * 5 * 5) # reshapes for the fully connected
+    x = self.pool(F.relu(self.conv3(x)))
+    x = x.view(-1, 128 * 4 * 4) # reshapes for the fully connected
     x = F.relu(self.fc1(x))
-    x = F.relu(self.fc2(x))
-    x = self.fc3(x)
+    x = self.fc2(x)
     return x
+
+# ============== Q1_21 ============== #
+  
+  # Total params: 164,234
+
+  def set_model_Q1_21(self):
+    self.conv1 = nn.Conv2d(3, 32, 3)
+    self.conv2 = nn.Conv2d(32, 32, 3)
+    self.conv3 = nn.Conv2d(32, 64, 3)
+    self.conv4 = nn.Conv2d(64, 64, 5)
+    self.pool = nn.MaxPool2d(2, 2)
+    self.fc1 = nn.Linear(64 * 4 * 4, 32)
+    self.fc2 = nn.Linear(32, 10)
+
+  def forward_Q1_21(self, x):
+    x = F.relu(self.conv1(x))
+    x = self.pool(F.relu(self.conv2(x)))
+    x = F.relu(self.conv3(x))
+    x = self.pool(F.relu(self.conv4(x)))
+    x = x.view(-1, 64 * 4 * 4) # reshapes for the fully connected
+    x = F.relu(self.fc1(x))
+    x = self.fc2(x)
+    return x
+
+# ============== Q1_22 ============== #
+  
+  # Total params: 105,258
+  
+  def set_model_Q1_22(self):
+    self.conv1 = nn.Conv2d(3, 32, 5)
+    self.conv2 = nn.Conv2d(32, 64, 5)
+    self.pool = nn.MaxPool2d(2, 2)
+    self.fc1 = nn.Linear(64 * 5 * 5, 32)
+    self.fc2 = nn.Linear(32, 10)
+
+  def forward_Q1_22(self, x):
+    x = self.pool(F.relu(self.conv1(x)))
+    x = self.pool(F.relu(self.conv2(x)))
+    x = x.view(-1, 64 * 5 * 5) # reshapes for the fully connected
+    x = F.relu(self.fc1(x))
+    x = self.fc2(x)
+    return x
+
+# # ============== Q1_23 ============== #
+  
+#   def set_model_Q1_23(self):
+#     self.conv1 = nn.Conv2d(3, 32, 5)
+#     self.conv2 = nn.Conv2d(32, 64, 5)
+#     self.pool = nn.MaxPool2d(2, 2)
+#     self.fc1 = nn.Linear(64 * 5 * 5, 32)
+#     self.fc2 = nn.Linear(32, 10)
+
+#   def forward_Q1_23(self, x):
+#     x = self.pool(F.relu(self.conv1(x)))
+#     x = self.pool(F.relu(self.conv2(x)))
+#     x = x.view(-1, 64 * 5 * 5) # reshapes for the fully connected
+#     x = F.relu(self.fc1(x))
+#     x = self.fc2(x)
+#     return x
 
 # ============== Q2 ============== # 
 
@@ -630,7 +694,9 @@ class ModelType(enum.Enum):
   Q1_18 = 19
   Q1_19 = 20
   Q1_20 = 21
-  Q2 = 2
+  Q1_21 = 22
+  Q1_22 = 23
+  Q2 = 24
 
   @staticmethod
   # parse a string name and get the corresponding enum
@@ -656,7 +722,9 @@ class ModelType(enum.Enum):
         "Q1_17".lower(): ModelType.Q1_17,
         "Q1_18".lower(): ModelType.Q1_18,
         "Q1_19".lower(): ModelType.Q1_19,
-        "Q1_20".lower(): ModelType.Q1_20,        
+        "Q1_20".lower(): ModelType.Q1_20,
+        "Q1_21".lower(): ModelType.Q1_21,
+        "Q1_22".lower(): ModelType.Q1_22,
         "Q2".lower(): ModelType.Q2,
     }
 
@@ -669,6 +737,6 @@ class ModelType(enum.Enum):
 '''
 - How high the test loss gets is in correlation with the data vs number of neurons. If we have too many neurons and not enough data, it will overfit giving high test error.
 - If the Train loss does not go down, it means the opposite, the ratio of data vs number of neurons is high meaning there is too much data and we are not being able to learn it with so little neurons.
-- Q1_4 was underfit due to so little neurons
-
+- Q1_4 was underfit due to so little neurons (6,194)
+- "With overfitting, the training error keeps going down while the test error goes up"
 '''

@@ -115,22 +115,22 @@ def save_statistics_to_file(epoch, train_loss, train_accuracy, test_loss, test_a
 def run(net: Net, trainloader, testloader):
 
   modelStatistics = ModelStatistics(EPOCHS, ["Train Loss", "Train Accuracy", "Test Loss", "Test Accuracy"])
-  modelStatistics.ax.set_title("Training")
-  modelStatistics.ax.set_xlabel("Epochs")
+  # modelStatistics.ax.set_xlabel('xlabel', fontsize=10)
+  # modelStatistics.ax.set_xlabel("Epochs")
 
   for epoch in range(EPOCHS):  # loop over the dataset multiple times
 
     train_loss , train_accuracy = train(net, trainloader, epoch)
     test_loss, test_accuracy = test(net, testloader)
 
-    modelStatistics.AddData("Train Loss", epoch, train_loss)
-    modelStatistics.AddData("Train Accuracy", epoch, train_accuracy)
-    modelStatistics.AddData("Test Loss", epoch, test_loss)
-    modelStatistics.AddData("Test Accuracy", epoch, test_accuracy)
+    modelStatistics.addData("Train Loss", epoch, train_loss)
+    modelStatistics.addData("Train Accuracy", epoch, train_accuracy)
+    modelStatistics.addData("Test Loss", epoch, test_loss)
+    modelStatistics.addData("Test Accuracy", epoch, test_accuracy)
     save_statistics_to_file(epoch, train_loss, train_accuracy, test_loss, test_accuracy)
 
     if((epoch + 1) in EPOCHS_TO_SAVE):
-      modelStatistics.Save(SavingPath.get_path(epoch+1, FIGURE_SUFFIX))
+      modelStatistics.save(SavingPath.get_path(epoch+1, FIGURE_SUFFIX), f"{str(net.model_name)}. Epoch-{(epoch + 1)}")
       torch.save(net.state_dict(), SavingPath.get_path(epoch+1, MODEL_SUFFIX))
 
     # save trained model. See `here <https://pytorch.org/docs/stable/notes/serialization.html>`_ for more details on saving PyTorch models.
@@ -226,7 +226,7 @@ if __name__ == '__main__':
     print('\n*************************************************')
     print('************* Running in DEBUG mode *************')
     print('*************************************************\n')
-    EPOCHS = 4
+    EPOCHS = 5
     # PATH = PATH + '_Debuging'
     DEBUG_FAST_EXECUTION = True
   else:

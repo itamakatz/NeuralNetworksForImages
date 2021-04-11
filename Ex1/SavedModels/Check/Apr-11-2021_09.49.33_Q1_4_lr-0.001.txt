@@ -1,0 +1,112 @@
+Net(
+  (conv1): Conv2d(3, 6, kernel_size=(5, 5), stride=(1, 1))
+  (conv2): Conv2d(6, 6, kernel_size=(5, 5), stride=(1, 1))
+  (conv3): Conv2d(6, 6, kernel_size=(5, 5), stride=(1, 1))
+  (conv4): Conv2d(6, 16, kernel_size=(5, 5), stride=(1, 1))
+  (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (fc1): Linear(in_features=64, out_features=20, bias=True)
+  (fc2): Linear(in_features=20, out_features=10, bias=True)
+  (loss_function): CrossEntropyLoss()
+)
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1            [-1, 6, 28, 28]             456
+            Conv2d-2            [-1, 6, 24, 24]             906
+         MaxPool2d-3            [-1, 6, 12, 12]               0
+            Conv2d-4              [-1, 6, 8, 8]             906
+            Conv2d-5             [-1, 16, 4, 4]           2,416
+         MaxPool2d-6             [-1, 16, 2, 2]               0
+            Linear-7                   [-1, 20]           1,300
+            Linear-8                   [-1, 10]             210
+================================================================
+Total params: 6,194
+Trainable params: 6,194
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.07
+Params size (MB): 0.02
+Estimated Total Size (MB): 0.11
+----------------------------------------------------------------
+
+Extra info:
+Model's state_dict:
+conv1.weight 	 torch.Size([6, 3, 5, 5])
+conv1.bias 	 torch.Size([6])
+conv2.weight 	 torch.Size([6, 6, 5, 5])
+conv2.bias 	 torch.Size([6])
+conv3.weight 	 torch.Size([6, 6, 5, 5])
+conv3.bias 	 torch.Size([6])
+conv4.weight 	 torch.Size([16, 6, 5, 5])
+conv4.bias 	 torch.Size([16])
+fc1.weight 	 torch.Size([20, 64])
+fc1.bias 	 torch.Size([20])
+fc2.weight 	 torch.Size([10, 20])
+fc2.bias 	 torch.Size([10])
+
+Optimizer's state_dict:
+state 	 {}
+param_groups 	 [{'lr': 0.001, 'momentum': 0.9, 'dampening': 0, 'weight_decay': 0, 'nesterov': False, 'params': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}]
+
+epoch: 1, train_loss: 1.9715088011455535, train_accuracy: 0.24478, test_loss: 1.7778289241313934, test_accuracy: 0.3282
+epoch: 2, train_loss: 1.634311947467327, train_accuracy: 0.38974, test_loss: 1.5395800397157668, test_accuracy: 0.4395
+epoch: 3, train_loss: 1.5100972896504403, train_accuracy: 0.44686, test_loss: 1.4711974755883217, test_accuracy: 0.4556
+epoch: 4, train_loss: 1.4397160483586788, train_accuracy: 0.47726, test_loss: 1.414998011019826, test_accuracy: 0.4842
+epoch: 5, train_loss: 1.4036290610784292, train_accuracy: 0.4925, test_loss: 1.4479326036810876, test_accuracy: 0.4771
+epoch: 6, train_loss: 1.3746440491074323, train_accuracy: 0.5038, test_loss: 1.3793845626786352, test_accuracy: 0.5028
+epoch: 7, train_loss: 1.3584203163400292, train_accuracy: 0.50892, test_loss: 1.34728010160625, test_accuracy: 0.5057
+epoch: 8, train_loss: 1.33854737352103, train_accuracy: 0.51714, test_loss: 1.357079818725586, test_accuracy: 0.5129
+epoch: 9, train_loss: 1.3242593249168992, train_accuracy: 0.52382, test_loss: 1.3471294677302241, test_accuracy: 0.5093
+epoch: 10, train_loss: 1.3100428549695016, train_accuracy: 0.5286, test_loss: 1.357199004995823, test_accuracy: 0.518
+epoch: 11, train_loss: 1.3011219660371542, train_accuracy: 0.53016, test_loss: 1.3161094347588718, test_accuracy: 0.5236
+epoch: 12, train_loss: 1.2984368214705586, train_accuracy: 0.53386, test_loss: 1.3053660976983608, test_accuracy: 0.5269
+epoch: 13, train_loss: 1.2891086372095346, train_accuracy: 0.53734, test_loss: 1.3307300642967224, test_accuracy: 0.5312
+epoch: 14, train_loss: 1.2829658966743946, train_accuracy: 0.53688, test_loss: 1.3267096805293113, test_accuracy: 0.5284
+epoch: 15, train_loss: 1.2806942754223942, train_accuracy: 0.5399, test_loss: 1.3420869757458567, test_accuracy: 0.5189
+epoch: 16, train_loss: 1.27453222579211, train_accuracy: 0.54122, test_loss: 1.2945986089169979, test_accuracy: 0.5361
+epoch: 17, train_loss: 1.2715371179196238, train_accuracy: 0.5452, test_loss: 1.304653936088085, test_accuracy: 0.5329
+epoch: 18, train_loss: 1.265952530555725, train_accuracy: 0.54638, test_loss: 1.3527285681426524, test_accuracy: 0.5124
+epoch: 19, train_loss: 1.266102808784917, train_accuracy: 0.54572, test_loss: 1.2982779860928655, test_accuracy: 0.5406
+epoch: 20, train_loss: 1.2668030258128047, train_accuracy: 0.5421, test_loss: 1.350419694569707, test_accuracy: 0.519
+epoch: 21, train_loss: 1.2591495055264235, train_accuracy: 0.54802, test_loss: 1.3493998484522105, test_accuracy: 0.518
+epoch: 22, train_loss: 1.2601882186189295, train_accuracy: 0.54908, test_loss: 1.370491440951079, test_accuracy: 0.5111
+epoch: 23, train_loss: 1.2545182559433579, train_accuracy: 0.55118, test_loss: 1.3060453167587518, test_accuracy: 0.533
+epoch: 24, train_loss: 1.2564736568182706, train_accuracy: 0.54822, test_loss: 1.3635827840685844, test_accuracy: 0.5112
+epoch: 25, train_loss: 1.2560020036682487, train_accuracy: 0.54998, test_loss: 1.3077673290669918, test_accuracy: 0.5419
+epoch: 26, train_loss: 1.2544289544403553, train_accuracy: 0.5512, test_loss: 1.4005285694390535, test_accuracy: 0.519
+epoch: 27, train_loss: 1.2495329896539449, train_accuracy: 0.55224, test_loss: 1.3068095265179873, test_accuracy: 0.5401
+epoch: 28, train_loss: 1.2520640239581466, train_accuracy: 0.55244, test_loss: 1.3534379595011472, test_accuracy: 0.5107
+epoch: 29, train_loss: 1.251779870324433, train_accuracy: 0.55344, test_loss: 1.3066173280138522, test_accuracy: 0.5364
+epoch: 30, train_loss: 1.247101995014921, train_accuracy: 0.5521, test_loss: 1.3473316928610206, test_accuracy: 0.5195
+epoch: 31, train_loss: 1.250113395279646, train_accuracy: 0.5545, test_loss: 1.3413814972668887, test_accuracy: 0.5327
+epoch: 32, train_loss: 1.2468247271677853, train_accuracy: 0.55172, test_loss: 1.3022541343212128, test_accuracy: 0.537
+epoch: 33, train_loss: 1.2440929980176687, train_accuracy: 0.55084, test_loss: 1.324282230745256, test_accuracy: 0.5253
+epoch: 34, train_loss: 1.2427678989899158, train_accuracy: 0.55376, test_loss: 1.328723144492507, test_accuracy: 0.5222
+epoch: 35, train_loss: 1.242279611977935, train_accuracy: 0.55506, test_loss: 1.3149462477430702, test_accuracy: 0.5314
+epoch: 36, train_loss: 1.240047982097566, train_accuracy: 0.55706, test_loss: 1.3230677518039942, test_accuracy: 0.5401
+epoch: 37, train_loss: 1.2398915552295744, train_accuracy: 0.5578, test_loss: 1.3534450858697296, test_accuracy: 0.5243
+epoch: 38, train_loss: 1.2411070974367857, train_accuracy: 0.55392, test_loss: 1.326143948470801, test_accuracy: 0.5218
+epoch: 39, train_loss: 1.2434723634253442, train_accuracy: 0.55472, test_loss: 1.392928626975417, test_accuracy: 0.5145
+epoch: 40, train_loss: 1.2384112901034952, train_accuracy: 0.55974, test_loss: 1.3200854132562876, test_accuracy: 0.5302
+epoch: 41, train_loss: 1.241527809857577, train_accuracy: 0.55678, test_loss: 1.340954834137857, test_accuracy: 0.5281
+epoch: 42, train_loss: 1.2404520972792805, train_accuracy: 0.5583, test_loss: 1.2855878806173802, test_accuracy: 0.5476
+epoch: 43, train_loss: 1.2395126378285886, train_accuracy: 0.5564, test_loss: 1.3237341467291117, test_accuracy: 0.5279
+epoch: 44, train_loss: 1.2421415029802918, train_accuracy: 0.55802, test_loss: 1.2820965326353908, test_accuracy: 0.546
+epoch: 45, train_loss: 1.239772315712571, train_accuracy: 0.5582, test_loss: 1.510457283514738, test_accuracy: 0.4868
+epoch: 46, train_loss: 1.2428706596815586, train_accuracy: 0.55644, test_loss: 1.3506113703817129, test_accuracy: 0.523
+epoch: 47, train_loss: 1.2377898577974737, train_accuracy: 0.55864, test_loss: 1.3257199603863061, test_accuracy: 0.537
+epoch: 48, train_loss: 1.2392454556712509, train_accuracy: 0.55998, test_loss: 1.3035606083571911, test_accuracy: 0.5382
+epoch: 49, train_loss: 1.2336400813302397, train_accuracy: 0.56118, test_loss: 1.3486664283812047, test_accuracy: 0.5215
+epoch: 50, train_loss: 1.23123189353019, train_accuracy: 0.56246, test_loss: 1.3251843893617392, test_accuracy: 0.5273
+
+Accuracy of plane : 46 %
+Accuracy of   car : 73 %
+Accuracy of  bird : 31 %
+Accuracy of   cat : 51 %
+Accuracy of  deer : 39 %
+Accuracy of   dog : 37 %
+Accuracy of  frog : 62 %
+Accuracy of horse : 50 %
+Accuracy of  ship : 74 %
+Accuracy of truck : 60 %

@@ -1,0 +1,82 @@
+Net(
+  (conv1): Conv2d(3, 6, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv2): Conv2d(6, 10, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv3): Conv2d(10, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (fc1): Linear(in_features=256, out_features=120, bias=True)
+  (fc2): Linear(in_features=120, out_features=84, bias=True)
+  (fc3): Linear(in_features=84, out_features=10, bias=True)
+  (loss_function): CrossEntropyLoss()
+)
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Conv2d-1            [-1, 6, 32, 32]             168
+         MaxPool2d-2            [-1, 6, 16, 16]               0
+            Conv2d-3           [-1, 10, 16, 16]             550
+         MaxPool2d-4             [-1, 10, 8, 8]               0
+            Conv2d-5             [-1, 16, 8, 8]           1,456
+         MaxPool2d-6             [-1, 16, 4, 4]               0
+            Linear-7                  [-1, 120]          30,840
+            Linear-8                   [-1, 84]          10,164
+            Linear-9                   [-1, 10]             850
+================================================================
+Total params: 44,028
+Trainable params: 44,028
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.01
+Forward/backward pass size (MB): 0.09
+Params size (MB): 0.17
+Estimated Total Size (MB): 0.27
+----------------------------------------------------------------
+
+Extra info:
+Model's state_dict:
+conv1.weight 	 torch.Size([6, 3, 3, 3])
+conv1.bias 	 torch.Size([6])
+conv2.weight 	 torch.Size([10, 6, 3, 3])
+conv2.bias 	 torch.Size([10])
+conv3.weight 	 torch.Size([16, 10, 3, 3])
+conv3.bias 	 torch.Size([16])
+fc1.weight 	 torch.Size([120, 256])
+fc1.bias 	 torch.Size([120])
+fc2.weight 	 torch.Size([84, 120])
+fc2.bias 	 torch.Size([84])
+fc3.weight 	 torch.Size([10, 84])
+fc3.bias 	 torch.Size([10])
+
+Optimizer's state_dict:
+state 	 {}
+param_groups 	 [{'lr': 0.001, 'momentum': 0.9, 'dampening': 0, 'weight_decay': 0, 'nesterov': False, 'params': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}]
+
+epoch: 1, train_loss: 1.787469953277111, train_accuracy: 0.34362, test_loss: 1.422325770765543, test_accuracy: 0.4867
+epoch: 2, train_loss: 1.327310997056365, train_accuracy: 0.52146, test_loss: 1.2696045489758254, test_accuracy: 0.5472
+epoch: 3, train_loss: 1.164749110660553, train_accuracy: 0.58236, test_loss: 1.1408042987957596, test_accuracy: 0.5993
+epoch: 4, train_loss: 1.0730093846897781, train_accuracy: 0.61958, test_loss: 1.0511896993219851, test_accuracy: 0.6318
+epoch: 5, train_loss: 1.0070133073155583, train_accuracy: 0.64314, test_loss: 1.0837210921294986, test_accuracy: 0.622
+epoch: 6, train_loss: 0.9582454743350297, train_accuracy: 0.6613, test_loss: 1.01596843701005, test_accuracy: 0.6462
+epoch: 7, train_loss: 0.9191960536545701, train_accuracy: 0.67656, test_loss: 1.0832412318065763, test_accuracy: 0.6336
+epoch: 8, train_loss: 0.889416286354363, train_accuracy: 0.6854, test_loss: 1.08963357966803, test_accuracy: 0.6276
+epoch: 9, train_loss: 0.863204345159838, train_accuracy: 0.69544, test_loss: 1.024079107740149, test_accuracy: 0.6498
+epoch: 10, train_loss: 0.8425952626793692, train_accuracy: 0.703, test_loss: 1.0710142656086012, test_accuracy: 0.6375
+epoch: 11, train_loss: 0.8204160857090353, train_accuracy: 0.71088, test_loss: 1.0128999039381743, test_accuracy: 0.6578
+epoch: 12, train_loss: 0.804658769166572, train_accuracy: 0.71624, test_loss: 1.0552374726109206, test_accuracy: 0.6462
+epoch: 13, train_loss: 0.7935716626983974, train_accuracy: 0.71846, test_loss: 1.114227761811763, test_accuracy: 0.6384
+epoch: 14, train_loss: 0.7814080064752879, train_accuracy: 0.72296, test_loss: 1.0627577805908863, test_accuracy: 0.651
+epoch: 15, train_loss: 0.7661413616981357, train_accuracy: 0.72916, test_loss: 1.0513469971153886, test_accuracy: 0.6477
+epoch: 16, train_loss: 0.7591503718688805, train_accuracy: 0.72974, test_loss: 1.0643384607661515, test_accuracy: 0.6549
+epoch: 17, train_loss: 0.7530202268114243, train_accuracy: 0.7326, test_loss: 1.0612084953048266, test_accuracy: 0.6505
+epoch: 18, train_loss: 0.7392594620616664, train_accuracy: 0.73846, test_loss: 1.1176355467071757, test_accuracy: 0.6429
+epoch: 19, train_loss: 0.736759060364801, train_accuracy: 0.73816, test_loss: 1.1355437302619569, test_accuracy: 0.6324
+epoch: 20, train_loss: 0.7250016553340084, train_accuracy: 0.74192, test_loss: 1.1248141721767373, test_accuracy: 0.6347
+epoch: 21, train_loss: 0.7210364482500986, train_accuracy: 0.74484, test_loss: 1.0865964343950734, test_accuracy: 0.6547
+epoch: 22, train_loss: 0.7105797475288319, train_accuracy: 0.74658, test_loss: 1.1361057769608685, test_accuracy: 0.6455
+epoch: 23, train_loss: 0.7107943407377149, train_accuracy: 0.74738, test_loss: 1.143479735614697, test_accuracy: 0.6453
+epoch: 24, train_loss: 0.701695862336405, train_accuracy: 0.75196, test_loss: 1.1574095809433376, test_accuracy: 0.6471
+epoch: 25, train_loss: 0.7013988023082911, train_accuracy: 0.75252, test_loss: 1.1663075912172907, test_accuracy: 0.646
+epoch: 26, train_loss: 0.701082406819298, train_accuracy: 0.75306, test_loss: 1.213614569739718, test_accuracy: 0.6499
+epoch: 27, train_loss: 0.6985462658446507, train_accuracy: 0.75134, test_loss: 1.1760455270834267, test_accuracy: 0.633
+epoch: 28, train_loss: 0.6958170426025486, train_accuracy: 0.7532, test_loss: 1.1917876071601523, test_accuracy: 0.6364
+epoch: 29, train_loss: 0.6936313170736946, train_accuracy: 0.75506, test_loss: 1.196872135567246, test_accuracy: 0.6459
+epoch: 30, train_loss: 0.691061740077124, train_accuracy: 0.75548, test_loss: 1.1569134905235259, test_accuracy: 0.6415

@@ -1,5 +1,8 @@
 from datetime import datetime
 import time
+import os
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Running_Time:
 
@@ -56,3 +59,65 @@ def get_new_executions_time(add_microsec=False):
     if(add_microsec): return datetime.today().strftime('%Y-%m-%d_%H-%M-%S.%f')
     else: return datetime.today().strftime('%Y-%m-%d_%H-%M-%S')        
 
+
+
+class SavingPath():
+
+  def __init__(self, args, saveModelDirPath):
+    SavingPath._lr = args.lr
+    if(args.debug_mode):
+      SavingPath._model_name = "_Debugging"
+    else:
+      if(args.model_name):
+        SavingPath._model_name = "_" + args.model_name
+      else:
+        SavingPath._model_name = ""
+
+    if not os.path.exists(saveModelDirPath):
+      os.makedirs(saveModelDirPath)
+
+    SavingPath._path = saveModelDirPath + time.strftime('%b-%d-%Y_%H.%M.%S', time.localtime()) + SavingPath._model_name + "_lr-" + str(SavingPath._lr)
+    
+  @staticmethod
+  def get_path(epoch = -1, suffix = ""):
+    if(epoch == -1):
+      return SavingPath._path + suffix
+    else:
+      return SavingPath._path +"_epoch-" + str(epoch) + suffix
+
+class PlotData():
+  def __init__(self, length):
+    self.index = 0
+    self.__maxindex = length
+    self.valuesList = np.zeros((2, length))
+  def isFull(self):
+    return self.index >= self.__maxindex
+
+class ModelStatistics():
+
+  def __init__(self, length, plotNames):
+    self.fig, self.ax = plt.subplots()
+    self.listDict = {}
+    for name in plotNames:
+      self.listDict[name] = PlotData(length)
+
+  def AddData(self, name, x, y):
+    if(self.listDict[name].isFull()):
+      raise Exception("Array is full. Possibly initialized with the wrong length")
+    self.listDict[name].valuesList[0][self.listDict[name].index] = x
+    self.listDict[name].valuesList[1][self.listDict[name].index] = y
+    self.listDict[name].index = self.listDict[name].index + 1
+
+  def Show(self):
+    self.ax.cla()
+    for name in self.listDict.keys():
+      self.ax.plot(self.listDict[name].valuesList[0][:self.listDict[name].index], self.listDict[name].valuesList[1][:self.listDict[name].index], label=name)
+    self.fig.legend()
+    self.fig.show()
+
+  def Save(self, path):
+    self.ax.cla()
+    for name in self.listDict.keys():
+      self.ax.plot(self.listDict[name].valuesList[0][:self.listDict[name].index], self.listDict[name].valuesList[1][:self.listDict[name].index], label=name)
+    self.fig.legend()
+    self.fig.savefig(path)

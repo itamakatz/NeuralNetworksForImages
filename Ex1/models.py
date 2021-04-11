@@ -72,6 +72,9 @@ class Net(nn.Module):
       ModelType.Q1_20: self.set_model_Q1_20,
       ModelType.Q1_21: self.set_model_Q1_21,
       ModelType.Q1_22: self.set_model_Q1_22,
+      ModelType.Q1_23: self.set_model_Q1_23,
+      ModelType.Q1_24: self.set_model_Q1_24,
+      ModelType.Q1_25: self.set_model_Q1_25,
       ModelType.Q2_1: self.set_model_Q2_1,
       ModelType.Q2_2: self.set_model_Q2_2,
     }
@@ -99,6 +102,9 @@ class Net(nn.Module):
       ModelType.Q1_20: self.forward_Q1_20,
       ModelType.Q1_21: self.forward_Q1_21,
       ModelType.Q1_22: self.forward_Q1_22,
+      ModelType.Q1_23: self.forward_Q1_23,
+      ModelType.Q1_24: self.forward_Q1_24,
+      ModelType.Q1_25: self.forward_Q1_25,
       ModelType.Q2_1: self.forward_Q2_1,
       ModelType.Q2_2: self.forward_Q2_2,
     }
@@ -265,7 +271,7 @@ class Net(nn.Module):
 
 # ============== Q1_7 ============== #
 
-  ''' this net is just like net 2 but with more neurons in the fully connected layers '''
+  ''' this net is just like net Q1_2 but with more neurons in the fully connected layers '''
 
   def set_model_Q1_7(self):
     self.conv1 = nn.Conv2d(3, 6, 5)
@@ -630,22 +636,88 @@ class Net(nn.Module):
     x = self.fc2(x)
     return x
 
-# # ============== Q1_23 ============== #
+# ============== Q1_23 ============== #
   
-#   def set_model_Q1_23(self):
-#     self.conv1 = nn.Conv2d(3, 32, 5)
-#     self.conv2 = nn.Conv2d(32, 64, 5)
-#     self.pool = nn.MaxPool2d(2, 2)
-#     self.fc1 = nn.Linear(64 * 5 * 5, 32)
-#     self.fc2 = nn.Linear(32, 10)
+  '''Continuing the idea of Q1_19, but with more parameters - 960,298'''
 
-#   def forward_Q1_23(self, x):
-#     x = self.pool(F.relu(self.conv1(x)))
-#     x = self.pool(F.relu(self.conv2(x)))
-#     x = x.view(-1, 64 * 5 * 5) # reshapes for the fully connected
-#     x = F.relu(self.fc1(x))
-#     x = self.fc2(x)
-#     return x
+  def set_model_Q1_23(self):
+    self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+    self.conv2 = nn.Conv2d(32, 32, 3, padding=1)
+    self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
+    self.conv4 = nn.Conv2d(64, 64, 3, padding=1)
+    self.conv5 = nn.Conv2d(64, 128, 3, padding=1)
+    self.conv6 = nn.Conv2d(128, 256, 3, padding=1)
+    self.pool = nn.MaxPool2d(2, 2)
+    self.fc1 = nn.Linear(256 * 4 * 4, 128)
+    self.fc2 = nn.Linear(128, 10)
+
+  def forward_Q1_23(self, x):
+    x = F.relu(self.conv1(x))
+    x = self.pool(F.relu(self.conv2(x)))
+    x = F.relu(self.conv3(x))
+    x = self.pool(F.relu(self.conv4(x)))
+    x = F.relu(self.conv5(x))
+    x = self.pool(F.relu(self.conv6(x)))
+    x = x.view(-1, 256 * 4 * 4) # reshapes for the fully connected
+    x = F.relu(self.fc1(x))
+    x = self.fc2(x)
+    return x
+
+# ============== Q1_24 ============== #
+  
+  '''Continuing the idea of Q1_19, but with more parameters - 1,060,010'''
+
+  def set_model_Q1_24(self):
+    self.conv1 = nn.Conv2d(3, 32, 5, padding=2)
+    self.conv2 = nn.Conv2d(32, 32, 5, padding=2)
+    self.conv3 = nn.Conv2d(32, 64, 5, padding=2)
+    self.conv4 = nn.Conv2d(64, 64, 5, padding=2)
+    self.conv5 = nn.Conv2d(64, 128, 5, padding=2)
+    self.conv6 = nn.Conv2d(128, 128, 5, padding=2)
+    self.pool = nn.MaxPool2d(2, 2)
+    self.fc1 = nn.Linear(128 * 4 * 4, 128)
+    self.fc2 = nn.Linear(128, 10)
+
+  def forward_Q1_24(self, x):
+    x = F.relu(self.conv1(x))
+    x = self.pool(F.relu(self.conv2(x)))
+    x = F.relu(self.conv3(x))
+    x = self.pool(F.relu(self.conv4(x)))
+    x = F.relu(self.conv5(x))
+    x = self.pool(F.relu(self.conv6(x)))
+    x = x.view(-1, 128 * 4 * 4) # reshapes for the fully connected
+    x = F.relu(self.fc1(x))
+    x = self.fc2(x)
+    return x
+
+# ============== Q1_25 ============== #
+  
+  '''Continuing the idea of Q1_19, but with more parameters - 2,141,610'''
+
+  def set_model_Q1_25(self):
+    self.conv1 = nn.Conv2d(3, 32, 5, padding=2)
+    self.conv2 = nn.Conv2d(32, 32, 5, padding=2)
+    self.conv3 = nn.Conv2d(32, 64, 5, padding=2)
+    self.conv4 = nn.Conv2d(64, 64, 5, padding=2)
+    self.conv5 = nn.Conv2d(64, 128, 5, padding=2)
+    self.conv6 = nn.Conv2d(128, 128, 5, padding=2)
+    self.conv7 = nn.Conv2d(128, 256, 5, padding=2)
+    self.pool = nn.MaxPool2d(2, 2)
+    self.fc1 = nn.Linear(256 * 4 * 4, 128)
+    self.fc2 = nn.Linear(128, 10)
+
+  def forward_Q1_25(self, x):
+    x = F.relu(self.conv1(x))
+    x = self.pool(F.relu(self.conv2(x)))
+    x = F.relu(self.conv3(x))
+    x = self.pool(F.relu(self.conv4(x)))
+    x = F.relu(self.conv5(x))
+    x = F.relu(self.conv6(x))
+    x = self.pool(F.relu(self.conv7(x)))
+    x = x.view(-1, 256 * 4 * 4) # reshapes for the fully connected
+    x = F.relu(self.fc1(x))
+    x = self.fc2(x)
+    return x
 
 # ============== Q2_1 ============== # 
 
@@ -672,9 +744,9 @@ class Net(nn.Module):
   def set_model_Q2_2(self):
     self.conv1 = nn.Conv2d(3, 6, 5)
     self.conv2 = nn.Conv2d(6, 16, 5)
-    self.fc1 = nn.Linear(16 * 24 * 24, 120)
-    self.fc2 = nn.Linear(120, 110)
-    self.fc3 = nn.Linear(110, 10)
+    self.fc1 = nn.Linear(16 * 24 * 24, 280)
+    self.fc2 = nn.Linear(280, 120)
+    self.fc3 = nn.Linear(120, 10)
 
   def forward_Q2_2(self, x):
       x = self.conv1(x)
@@ -720,8 +792,11 @@ class ModelType(enum.Enum):
   Q1_20 = 21
   Q1_21 = 22
   Q1_22 = 23
-  Q2_1 = 24
-  Q2_2 = 24
+  Q1_23 = 24
+  Q1_24 = 25
+  Q1_25 = 26
+  Q2_1 = 27
+  Q2_2 = 28
 
   @staticmethod
   # parse a string name and get the corresponding enum
@@ -750,6 +825,9 @@ class ModelType(enum.Enum):
         "Q1_20".lower(): ModelType.Q1_20,
         "Q1_21".lower(): ModelType.Q1_21,
         "Q1_22".lower(): ModelType.Q1_22,
+        "Q1_23".lower(): ModelType.Q1_23,
+        "Q1_24".lower(): ModelType.Q1_24,
+        "Q1_25".lower(): ModelType.Q1_25,
         "Q2_1".lower(): ModelType.Q2_1,
         "Q2_2".lower(): ModelType.Q2_2,
     }
@@ -758,11 +836,3 @@ class ModelType(enum.Enum):
       return models_dict[model_name.lower()]
     else:
       raise Exception(f"No such model named: {model_name}")
-
-
-'''
-- How high the test loss gets is in correlation with the data vs number of neurons. If we have too many neurons and not enough data, it will overfit giving high test error.
-- If the Train loss does not go down, it means the opposite, the ratio of data vs number of neurons is high meaning there is too much data and we are not being able to learn it with so little neurons.
-- Q1_4 was underfit due to so little neurons (6,194)
-- "With overfitting, the training error keeps going down while the test error goes up"
-'''

@@ -12,14 +12,13 @@ from contextlib import redirect_stdout
 from utils import Running_Time, ModelStatistics, SavingPath, PlotData
 from models import Net
 
+# ◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄ magic numbers/strings ◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄► #
+
 EPOCHS = 10
 EPOCHS_TO_SAVE = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 
 DOWNLOAD_FLAG = False
 # DOWNLOAD_FLAG = True
-
-DEBUG_PRINT = False
-# DEBUG_PRINT = True
 
 DEBUG_FAST_EXECUTION = False
 # DEBUG_FAST_EXECUTION = True
@@ -31,34 +30,18 @@ INFO_SUFFIX = '.txt'
 
 run_time = Running_Time()
 
-# functions to show an image
-def imshow(img):
-    img = img / 2 + 0.5     # unnormalize
-    npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    plt.show()
-
-# if __name__ == '__main__':
-#   # get some random training images
-#   data_iter = iter(trainloader)
-#   images, labels = data_iter.next()
-
-#   # show images
-#   imshow(torchvision.utils.make_grid(images))
-#   # print labels
-#   print(' '.join('%5s' % classes[labels[j]] for j in range(4)))
-
 # ◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄►◄► #
 
+# training
 def train(net: Net, trainloader, epoch):
+  ''' trains the net given a set of inputs and outputs '''
+
   net.train()
   running_loss = 0.0
   train_loss = 0.0
-  # train_accuracy = 0
   correct = 0
   total = 0
   for i, data in enumerate(trainloader, 0):
-    # get the inputs; data is a list of [inputs, labels]
     x, y = data
 
     if(torch.cuda.is_available()):
@@ -87,7 +70,10 @@ def train(net: Net, trainloader, epoch):
 
   return (train_loss/ len(trainloader),  correct/total)
 
+# 
 def test(net: Net, testloader):
+  ''' validates the net given a set of inputs and outputs '''
+
   net.eval()
   correct = 0
   total = 0
@@ -107,16 +93,11 @@ def test(net: Net, testloader):
     test_loss /= len(testloader)
   return (test_loss, correct/total)
 
-def save_statistics_to_file(epoch, train_loss, train_accuracy, test_loss, test_accuracy):
-  with open(SavingPath.get_path(suffix=INFO_SUFFIX) , 'a+') as f:
-    with redirect_stdout(f):
-      print(f'epoch: {epoch+1}, train_loss: {train_loss}, train_accuracy: {train_accuracy}, test_loss: {test_loss}, test_accuracy: {test_accuracy}')
-
 def run(net: Net, trainloader, testloader):
+  ''' runs the test and validation for each ephoch as well as saves figures, 
+      the model and updates a statistics text file '''
 
   modelStatistics = ModelStatistics(EPOCHS, ["Train Loss", "Train Accuracy", "Test Loss", "Test Accuracy"])
-  # modelStatistics.ax.set_xlabel('xlabel', fontsize=10)
-  # modelStatistics.ax.set_xlabel("Epochs")
 
   for epoch in range(EPOCHS):  # loop over the dataset multiple times
 
@@ -127,7 +108,11 @@ def run(net: Net, trainloader, testloader):
     modelStatistics.addData("Train Accuracy", epoch, train_accuracy)
     modelStatistics.addData("Test Loss", epoch, test_loss)
     modelStatistics.addData("Test Accuracy", epoch, test_accuracy)
-    save_statistics_to_file(epoch, train_loss, train_accuracy, test_loss, test_accuracy)
+
+    # save the current statistics to a file
+    with open(SavingPath.get_path(suffix=INFO_SUFFIX) , 'a+') as f:
+      with redirect_stdout(f):
+        print(f'epoch: {epoch+1}, train_loss: {train_loss}, train_accuracy: {train_accuracy}, test_loss: {test_loss}, test_accuracy: {test_accuracy}')
 
     if((epoch + 1) in EPOCHS_TO_SAVE):
       modelStatistics.save(SavingPath.get_path(epoch+1, FIGURE_SUFFIX), f"{str(net.model_name)}. Epoch-{(epoch + 1)}")
@@ -139,6 +124,9 @@ def run(net: Net, trainloader, testloader):
   print('Finished Training')
 
 def final_test(net, testloader, classes):
+  ''' final test that prints out also the statistics over each 
+      of the 10 classes '''
+
   class_correct = list(0. for i in range(10))
   class_total = list(0. for i in range(10))
   with torch.no_grad():
@@ -154,7 +142,6 @@ def final_test(net, testloader, classes):
         class_correct[label] += c[i].item()
         class_total[label] += 1
 
-
   with open(SavingPath.get_path(suffix=INFO_SUFFIX) , 'a+') as f:
     with redirect_stdout(f):
       print()
@@ -162,6 +149,7 @@ def final_test(net, testloader, classes):
         print('Accuracy of %5s : %2d %%' % (classes[i], 100 * class_correct[i] / class_total[i]))
   
 def main(args):
+  ''' initializes everything before starting lo train the net '''
 
   # ◄►◄► Set CUDA GPU ◄►◄► #
   if(torch.cuda.is_available()):
@@ -186,6 +174,7 @@ def main(args):
   if(torch.cuda.is_available()):
     net.cuda() 
 
+  # save some info about the model into a text file
   with open(SavingPath.get_path(suffix=INFO_SUFFIX) , 'w') as f:
     with redirect_stdout(f):
       print(net)
@@ -208,6 +197,8 @@ if __name__ == '__main__':
 
   run_time = Running_Time()
 
+  # parse the user input
+
   parser = argparse.ArgumentParser(description='Test cifar10')
   parser.add_argument('--epochs', type=int, default=10, metavar='e',
                       help='number of epochs to train (default: 10)')
@@ -226,18 +217,14 @@ if __name__ == '__main__':
     print('************* Running in DEBUG mode *************')
     print('*************************************************\n')
     EPOCHS = 5
-    # PATH = PATH + '_Debuging'
     DEBUG_FAST_EXECUTION = True
   else:
     EPOCHS = args.epochs
-    # if(args.model_name):
-      # PATH = PATH + '_' + args.model_name
     DEBUG_FAST_EXECUTION = False
 
   SavingPath(args, SAVE_DIR_NAME)
-  main(args)
+
+  main(args) # start the training!!
 
   print("Total Execution Time:")
   print(f"--- {run_time.get_running_time()} ---")
-
-  # _ = input("Press enter to finish..")

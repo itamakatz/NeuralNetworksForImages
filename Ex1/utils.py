@@ -1,20 +1,20 @@
-from datetime import datetime
 import time
 import os
 import matplotlib.pyplot as plt
 import numpy as np
 
 class Running_Time:
+  '''Class that stores the initialized time and returns the running time'''
+  def __init__(self):
+    self.start_time = time.time()
 
-    def __init__(self):
-        self.start_time = time.time()
+  def get_running_time(self):
+    current_time = time.time()
+    # print("Total Execution Time:")
+    return f"{((current_time - self.start_time)//60):.0f}:{(current_time - self.start_time)%60:.0f} min:sec"
 
-    def get_running_time(self):
-        current_time = time.time()
-        # print("Total Execution Time:")
-        return f"{((current_time - self.start_time)//60):.0f}:{(current_time - self.start_time)%60:.0f} min:sec"
-    
 class SavingPath():
+  ''' class to creates the correct saving path '''
 
   def __init__(self, args, saveDirName):
     
@@ -37,12 +37,15 @@ class SavingPath():
     
   @staticmethod
   def get_path(epoch = -1, suffix = ""):
+    ''' A static method that return the correct saving path '''
     if(epoch == -1):
       return SavingPath._path + suffix
     else:
       return SavingPath._path +"_epoch-" + str(epoch) + suffix
 
 class PlotData():
+  '''class that serves as a kind of tuple, for easier using the ModelStatistics class'''
+
   def __init__(self, length):
     self.index = 0
     self.__maxindex = length
@@ -51,6 +54,7 @@ class PlotData():
     return self.index >= self.__maxindex
 
 class ModelStatistics():
+  '''Class that stores events to be used in a plot'''
 
   def __init__(self, length, plotNames):
     self.fig, self.ax = plt.subplots()

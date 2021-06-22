@@ -1,0 +1,5 @@
+https://www.cyberciti.biz/open-source/command-line-hacks/linux-gpu-monitoring-and-diagnostic-commands/
+
+gpustat
+nvidia-smi -q -g 0 -d UTILIZATION -l 1
+nvtop - Best

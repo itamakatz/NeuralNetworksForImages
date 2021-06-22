@@ -1,1 +1,5 @@
-Ex1/data/*
+/data/*
+*/data/*
+*/Results/*
+*/Best Results/*
+*/__pycache__/*

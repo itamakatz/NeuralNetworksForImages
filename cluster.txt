@@ -1,0 +1,93 @@
+sshpass -p aso1076a ssh -o TCPKeepAlive=yes -o ServerAliveInterval=15 samsona@urim.md.biu.ac.il
+cd ./itamar/NeuralNetworksImages/ex3/
+cd ./Documents/NeuralNetworksImages/ex3/
+cd ./itamar/NN4Images/ex2/
+
+aso1076a
+ssh -o TCPKeepAlive=yes -o ServerAliveInterval=15 samsona@urim.md.biu.ac.il
+password: aso1076a
+checkpoint
+nvidia-smi
+
+Copy file: 
+    <<< FROM THE LOCAL SHELL!! >>>
+    Local -> Cluster
+        sshpass -p aso1076a scp ./*.py samsona@urim.md.biu.ac.il:/home/samson-vol/samsona/itamar/NeuralNetworksImages/ex3/ | echo $(date '+%H:%M:%S')
+        sshpass -p aso1076a scp ./*.py samsona@urim.md.biu.ac.il:/home/samson-vol/samsona/itamar/inbar/ex3/ | echo $(date '+%H:%M:%S')
+        
+        sshpass -p aso1076a rsync -P -r ./Running_Scripts/ samsona@urim.md.biu.ac.il:/home/samson-vol/samsona/itamar/ex2/Running_Scripts/ | echo $(date '+%H:%M:%S')
+
+        sshpass -p aso1076a rsync -P -r ./data/ samsona@urim.md.biu.ac.il:/home/samson-vol/samsona/itamar/NN4Images/ex2/data/ | echo $(date '+%H:%M:%S')
+        sshpass -p aso1076a scp -r ./*.py samsona@urim.md.biu.ac.il:/home/samson-vol/samsona/itamar/NN4Images/ex2/ | echo $(date '+%H:%M:%S')
+
+    Cluster -> Local
+        sshpass -p aso1076a scp -r samsona@urim.md.biu.ac.il:/home/samson-vol/samsona/itamar/ex2/Results/ ./
+        sshpass -p aso1076a rsync -a --progress -u --prune-empty-dirs samsona@urim.md.biu.ac.il:/home/samson-vol/samsona/itamar/ex2/Results/ ./Results/
+        rsync -a --progress -u --prune-empty-dirs  ./Results/ /media/itamar/Win-Linux/Results/
+
+sys.path.append('/usr/local/lib/python3.6')
+Defaulting to user installation because normal site-packages is not writeable
+[
+    '', 
+    '/opt/miniconda3/lib/python37.zip', 
+    '/opt/miniconda3/lib/python3.7', 
+    '/opt/miniconda3/lib/python3.7/lib-dynload', 
+    '/opt/miniconda3/lib/python3.7/site-packages']
+
+Local to Local drive:
+    rsync -a --progress -u --prune-empty-dirs  ./Results/ /media/itamar/Win-Linux/Results/
+
+Zip the results to a different dir:
+    zip -r /media/itamar/Win-Linux/Results_compressed.zip ./Results/
+    zip -r /home/itamar/Documents/catkin_ws_saving_point.zip /home/itamar/catkin_ws
+
+Run:
+    python3 ./ex2.py -g "M1" -d "M3" -b 24 -l "non_saturated" -k 4 -e 50 -z 50 --dataset "MNIST" -sm
+    python3 ./ex2.py -g "M11" -d "M12" -b 128 -l "non_saturated" -k 4 -e 50 -z 100 -gs 5 -ds 2 --dataset "celeb" -sm
+    python3 ./ex2.py -g "M11" -d "M12" -b 128 -l "non_saturated" -k 2 -e 50 -z 100 -gs 3 -ds 1 --dataset "celeb" -sm
+    python3 ./ex2.py -g "M10" -d "M11" -b 128 -l "non_saturated" -k 2 -e 50 -z 100 -gs 3 -ds 1 --dataset "celeb" -sm
+    python3 ./ex2.py -g "M13" -d "M13" -b 128 -l "non_saturated" -k 2 -e 50 -z 100 -gs 3 -ds 1 --dataset "celeb" -sm
+    python3 ./ex2.py -g "M14" -d "M14" -b 128 -l "non_saturated" -k 1 -e 50 -z 100 -gs 5 -ds 2 --dataset "celeb" -sm
+    python3 ./ex2.py -g "M14" -d "M14" -b 128 -l "non_saturated" -k 0 -e 50 -z 100 -gs 0 -ds 0 --dataset "celeb" -sm
+
+    python3 ./ex2.py -g "M11" -d "M12" -b 128 -l "non_saturated" -k 10 -e 50 -z 100 -gs 3 -ds 5 --dataset "celeb" -sm
+                        -g "M11" -d "M12" -b 128 -l "non_saturated" -k 10 -e 50 -z 100 -gs 3 -ds 5 --dataset "celeb" -sm
+
+    python3 ./ex2.py -g "M10" -d "M11" -b 128 -l "non_saturated" -k 2 -e 50 -z 100 -gs 5 -ds 1 --dataset "celeb" -sm -lr 0.0002
+    python3 ./ex2.py -g "M11" -d "M12" -b 128 -l "non_saturated" -k 2 -e 50 -z 100 -gs 5 -ds 1 --dataset "celeb" -sm -lr 0.0002
+    python3 ./ex2.py -g "M14" -d "M14" -b 128 -l "non_saturated" -k 2 -e 50 -z 100 -gs 5 -ds 2 --dataset "celeb" -sm -lr 0.0002
+
+    ffmpeg -framerate 25 -i "./*.dng" -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4
+    ffmpeg -framerate 60 -i %04d.png -c:v libx264 -profile:v high -crf 1 -s 64x64 -pix_fmt yuv420p output_60fps.mp4
+    ffmpeg -framerate 20 -i %04d.png -c:v libx264 -profile:v high -crf 1 -s 64x64 -pix_fmt yuv420p output_60fps.mp4
+
+
+rm -r Results/
+
+Equivalent:
+    ssh-copy-id samsona@urim.md.biu.ac.il
+    cat ~/.ssh/id_rsa.pub | ssh samsona@urim.md.biu.ac.il "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+
+Links:
+    RSync: https://linux.die.net/man/1/rsync
+
+
+
+NonSaturated:
+    May-26_23.18.39_g-M1_d-M1_l-NonSaturated_e-5_k-2_b-48_z-100_d-MNIST_gs-1_ds-3_name-urim-Done - mode collapse!
+    Best:
+        May-26_23.49.58_g-M1_d-M3_l-NonSaturated_e-5_k-2_b-48_z-100_d-MNIST_gs-3_ds-3_name-urim-Done
+        May-26_23.18.12_g-M1_d-M3_l-NonSaturated_e-5_k-2_b-48_z-100_d-MNIST_gs-1_ds-5_name-urim-Done
+        May-26_23.03.41_g-M1_d-M1_l-NonSaturated_e-5_k-2_b-48_z-100_d-MNIST_gs-1_ds-1_name-urim-Done
+        May-26_23.02.55_g-M1_d-M3_l-NonSaturated_e-5_k-2_b-48_z-100_d-MNIST_gs-1_ds-3_name-urim-Done
+        May-26_21.51.12_g-M1_d-M1_l-NonSaturated_e-5_k-0_b-48_z-100_d-MNIST_gs-3_ds-5_name-urim-Done - Maybe test with 50
+        May-27_01.54.22_g-M1_d-M3_l-NonSaturated_e-5_k-4_b-48_z-100_d-MNIST_gs-1_ds-5_name-urim-Done - Do with 50
+        
+        May-27_01.54.51_g-M1_d-M1_l-NonSaturated_e-50_k-2_b-48_z-100_d-MNIST_gs-1_ds-1_name-urim-Done - Mode Collapse!
+
+Good CrossEntropy:
+    May-26_23.35.02_g-M1_d-M1_l-CrossEntropy_e-5_k-2_b-48_z-100_d-MNIST_gs-1_ds-5_name-urim-Done
+    May-26_23.18.40_g-M1_d-M1_l-CrossEntropy_e-5_k-2_b-48_z-100_d-MNIST_gs-1_ds-3_name-urim-Done
+    May-26_23.18.09_g-M1_d-M3_l-CrossEntropy_e-5_k-2_b-48_z-100_d-MNIST_gs-1_ds-5_name-urim-Done
+    May-26_23.03.43_g-M1_d-M1_l-CrossEntropy_e-5_k-2_b-48_z-100_d-MNIST_gs-1_ds-1_name-urim-Done
+    May-26_23.02.53_g-M1_d-M3_l-CrossEntropy_e-5_k-2_b-48_z-100_d-MNIST_gs-1_ds-3_name-urim-Done

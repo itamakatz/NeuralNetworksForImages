@@ -1,0 +1,20 @@
+ex2_316327055_342689007
+
+Run: 
+python3 ./ex3.py --release -me M1 -md M1 -b 48 -z 12 -e 100 -lr 0.5e-3 --fit_z --str method_5
+python3 ./ex3.py --release -me M1 -md M1 -b 48 -z 10 -e 100 -lr 0.5e-3 --fit_z --str method_9 -sm
+python3 ./ex3_5.py -i 10000 -t denoising -im negative --str method-5
+python3 ./ex3_5.py -i 10000 -t denoising -im negative --str method-5
+python3 ./ex3_5.py -i 10000 -t denoising -im normal --str method-5
+python3 ./ex3_5.py -i 1000 -t denoising -im normal
+python3 ./ex3_5.py -i 1000 -t denoising -im normal --std 0.1 --str method-5_restored_im_both
+python3 ./ex3_5.py -i 10000 -t denoising -im flip --std 0.5 --str method-5_restored_im_both
+python3 ./ex3_2.py -q Q4 -o
+
+
+Links:
+    1. many papers of some guy that are relevant: https://cszn.github.io/
+    2. Real DIP code: https://github.com/DmitryUlyanov/deep-image-prior
+    3. Real DIP paper: https://arxiv.org/pdf/1711.10925.pdf
+    4. Previous paper for Q5: https://arxiv.org/pdf/2008.13751.pdf
+    5. graph for papers: https://www.connectedpapers.com/main/d54ced06220aaefef519b67880faad4cb545f0d4/PlugandPlay-Image-Restoration-with-Deep-Denoiser-Prior/graph 

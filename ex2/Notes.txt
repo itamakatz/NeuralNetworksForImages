@@ -1,0 +1,135 @@
+ex2_316327055_342689007
+
+Run: 
+python3 ./ex2.py -g "M1" -d "M3" -b 24 -l "non_saturated" -k 4 -e 50 -z 50 --dataset "MNIST"
+python3 ./ex2.py -g "M1" -d "M3" -b 48 -l "non_saturated" -k 0 -e 20 -z 50 --dataset "MNIST" -sm
+python3 ./ex2.py -g "M1" -d "M1" -b 128 -l "non_saturated" -k 3 -e 50 -z 100 -gs 5 -ds 2 --dataset "celeb"
+python3 ./ex2.py -g "M11" -d "M12" -b 128 -l "non_saturated" -k 2 -e 50 -z 100 -gs 5 -ds 2 --dataset "celeb"
+python3 ./ex2.py -g "M11" -d "M12" -b 32 -l "non_saturated" -k 4 -e 50 -z 100 -gs 1 -ds 2 --dataset "celeb" -sm
+python3 ./ex2.py -g "M11" -d "M12" -b 8 -l "non_saturated" -k 5 -e 50 -z 1000 -gs 2 -ds 1 --dataset "celeb" -sm
+
+python3 ./ex2.py -g "M11" -d "M12" -b 8 -l "non_saturated" -k 5 -e 50 -z 1000 -gs 2 -ds 1 --gen_lr 0.0004 --dis_lr  0.0001 --dataset "celeb" -sm
+python3 ./ex2.py -g "M11" -d "M12" -b 8 -l "non_saturated" -k 4 -e 50 -z 100 -gs 3 -ds 1 --gen_lr 0.0004 --dis_lr  0.0001 --dataset "celeb" -sm
+python3 ./ex2.py -g "M11" -d "M12" -b 4 -l "non_saturated" -k 4 -e 50 -z 100 -gs 3 -ds 1 --gen_lr 0.0004 --dis_lr  0.0001 --dataset "celeb" -sm
+python3 ./ex2.py -g "M11" -d "M12" -b 4 -l "non_saturated" -k 4 -e 50 -z 75 -gs 3 -ds 1 --gen_lr 0.0004 --dis_lr  0.0001 --dataset "celeb" -sm
+
+python3 ./ex2.py -g "M1" -d "M1" -b 48 -l "non_saturated" -k 0 -e 50 -z 50 -gs 3 -ds 5 --dataset "MNIST"
+python3 ./ex2.py -g "M1" -d "M1" -b 48 -l "non_saturated" -k 0 -e 50 -z 100 -gs 3 -ds 5 --dataset "MNIST"
+
+python3 ./ex2.py -g "M1" -d "M3" -b 24 -l "non_saturated" -k 4 -e 50 -z 100 -gs 1 -ds 5 --dataset "MNIST" --dis_lr 0.001 --gen_lr 0.001
+python3 ./ex2.py -g "M1" -d "M3" -b 48 -l "non_saturated" -k 4 -e 50 -z 50 -gs 1 -ds 1 --dataset "MNIST"
+
+python3 ./ex2.py -g "M1" -d "M1" -b 24 -l "mse" -k 0 -e 50 -z 500 --dataset "MNIST" -sm
+
+python3 ./ex2.py --release -g "M5" -d "M5" -b 32 -e 50 -z 100 --gen_lr 0.0001 --dataset "celeb" -sm
+
+python3 ./ex2.py --release -g "M5" -d "M5" -b 32 -e 200 -z 500 --gen_lr 0.00001 --dataset "celeb" -sm
+python3 ./ex2.py --release -g "M4" -d "M4" -b 32 -e 200 -z 500 --gen_lr 0.00001 --dataset "celeb" -sm
+
+
+
+Create Video:
+    python ./downscale.py
+    ffmpeg -framerate 60 -i %04d.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output_60fps.mp4
+
+Notes:
+
+MNIST:
+    G: M1. Trainable params: 675025
+    D: M3. Trainable params: 1460225
+
+
+    May-10_16.42.06_g-M1_d-M3_l-BCEWithLogitsLoss()_e-50_k-2_b-48_z-100_d-MINST
+        Best so far. but takes at least 50 epochs
+
+    I think the point is to used d-M3 and g-M4 with less dropouts.
+
+    The combinations of the dropouts and 1-2 unrolling steps makes the generator not to lock itself.
+
+    May-10_16.34.00_g-M3_d-M3_l-BCEWithLogitsLoss()_e-50_k-0_b-48_z-100_d-MINST
+        Only gives solid 1's
+        Makes sense since k=0 and both gen and dis are fully connected and gen has no dropouts.
+
+    May-10_16.55.27_g-M4_d-M3_l-BCEWithLogitsLoss()_e-50_k-2_b-48_z-100_d-MINST:
+        Gives to much freedom to the generator. 
+        Will probably need at least 50 to get something usefull. 
+        Next step is to check if having a lowe k changes the variance of the generator (since that is the way we force the generator not to mode colapse) 
+
+    Note that the best results are when dis is has only fully connected
+
+    Also note that as opposed to the recommendation, sigmoid gives terrible results while tanh gives good ones.
+
+    May-10_17.09.54_g-M4_d-M3_l-BCEWithLogitsLoss()_e-100_k-0_b-48_z-100_d-MINST:
+        Was bad. It simply made a white cloud in the middle
+        This is interesting since the only difference from the best result is that k=0!!
+        Therefore I need to check what happends as a with g-M4_d-M3 as a function of k.
+
+    May-10_19.13.36_g-M1_d-M3_l-BCEWithLogitsLoss()_e-150_k-1_b-48_z-100_d-MINST-Stopped:
+        Did not give a good result since k is low.
+        It got stuck on something unclear and did not change
+
+    May-10_20.36.55_g-M1_d-M1_l-BCEWithLogitsLoss()_e-150_k-5_b-48_z-100_d-MINST-Stopped
+        g-M1_d-M1 did not work even with k=5
+
+    May-11_10.09.26_g-M1_d-M3_l-NonSaturatedCrossEntropy()_e-150_k-4_b-48_z-100_d-MINST-Stopped
+    May-11_10.17.36_g-M4_d-M3_l-NonSaturatedCrossEntropy()_e-150_k-4_b-48_z-100_d-MINST-Stopped
+
+Celebs:
+
+    G: M1. Trainable params: 3174723
+    G: M2. Trainable params: 3327299
+    G: M5. Trainable params: 3576704
+    G: M6. Trainable params: 1068928
+    G: M7. Trainable params: 1100224
+    G: M8. Trainable params: 12658432
+    G: M9. Trainable params: 3448576
+    D: M1. Trainable params: 2760385
+    D: M2. Trainable params: 5440609
+    D: M3. Trainable params: 2737473
+    D: M4. Trainable params: 3614177
+    D: M7. Trainable params: 2765952
+    D: M8. Trainable params: 663680
+    D: M9. Trainable params: 694848
+    D: M10. Trainable params: 11036928
+
+    May-18_18.57.15_g-M6_d-M8_l-NonSaturated(nn.BCEWithLogitsLoss)_e-100_k-2_b-48_z-100_d-celeb-Stopped
+        This was a downscaled version to try and run faster the data. 
+        The loss plot shows the generator did improve with the amount of epochs, but the discriminator did not,
+        it just stayed fix.
+        Conclusion:
+            1. lower k to 0. 
+            2. change d. Im trying with d=d/2 (M7 & M9) and Inbar suggested the opposite d=d*2 (M8 & M10)
+        Other possible changes:
+            We are using ReLu for the generator but using tanh instead of sigmoid for the last activation function of the discriminator. maybe 
+                we should change that.
+
+    May-19_10.01.39_g-M7_d-M9_l-NonSaturated(nn.BCEWithLogitsLoss)_e-100_k-0_b-48_z-100_d-celeb-Stopped
+        This is the same net as before and with k=0 the gen loss also stayed fixed. 
+        Conclusions: 
+            Since with k=2 the gen did improve, maybe we should stay with k=2 but to lower/higher the complexity
+                of the discriminator
+
+    May-19_10.01.39_g-M7_d-M9_l-NonSaturated(nn.BCEWithLogitsLoss)_e-100_k-0_b-48_z-100_d-celeb-Stopped
+        Both losses are straight lines with no improvement.
+        The gen is probably since k=0 and the dis might be because we indeed need to have d=d*2 and not d=d/2
+        Conclusions:
+            Try d=d*2 for the dis, with k=2 and maybe d=d*2 for the gen as well
+
+    ---
+
+    11,12 -> dcgan_faces_tutorial
+    10,11 -> 1,1 * 2
+    13,13 -> 11,12 * 2
+
+    Promising:
+        May-20_18.07.02_g-M11_d-M12_l-NonSaturated_e-2_k-0_b-128_z-100_d-celeb_gs-3_ds-1_name-urim-Done - Very interesting. At around iteration epoch 2 it the loss plot becomes constant!
+        May-20_19.54.53_g-M10_d-M11_l-NonSaturated_e-2_k-0_b-128_z-100_d-celeb_gs-3_ds-1_name-urim - There is a crazy spick suddenly!
+        May-20_19.56.48_g-M11_d-M12_l-NonSaturated_e-2_k-0_b-128_z-100_d-celeb_gs-3_ds-3_name-urim - Very close but cant generate anything. question is, is it equal to gs-1,ds-1?
+        May-21_05.04.24_g-M11_d-M12_l-NonSaturated_e-3_k-2_b-128_z-100_d-celeb_gs-5_ds-1_name-urim-Done - BEST!!!
+        May-21_09.29.19_g-M11_d-M12_l-NonSaturated_e-50_k-2_b-128_z-100_d-celeb_gs-5_ds-1_name-urim - BEST!!! Incredible!!
+        M14_M14_e-50_k-2_gs-5_ds-2_lr-0.0002_sm
+
+Links:
+    1. Good code for unrolled GAN: https://github.com/andrewliao11/unrolled-gans
+    2. Celebs architecture - 1: https://github.com/AKASHKADEL/dcgan-celeba/blob/master/networks.py
+    3. Pytorch DCGAN: https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html
